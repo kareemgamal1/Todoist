@@ -1,0 +1,172 @@
+<!-- 
+1-Create the whole page view first,
+it should contain a navbar with a menu containing (Inbox, Today, Upcoming,Projects (expandable) )
+
+2-Each task should be linked initially to a default project, the user can change that project
+and then it appears in that project, selecting default removes it from the current project array
+
+3-I should be able to get the current date, and for each project i should check if it's today,
+if it's then put it in today menu, else put it in the upcoming in 
+it's respectable day (limit it to a year from now), in addition to that all tasks should be
+in the inbox menu
+
+4-each task should have a description that's hidden, priority that colors the task accordingly,
+a checkbox that removes it (or move it to finished tasks), a delete button that removes it 
+(or move it to deleted tasks), a drop down button to expand the information about the task overlaying
+ the rest of the page
+
+5-set a 10 tasks per day goal and increase them for each task finished
+
+6-put game logic in a module, DOM stuff in another module
+
+7-
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../src/css/all.min.css">
+        <link rel="stylesheet" href="../src/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../src/css/main.css">
+        <title>Todoist</title>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand navbar-light ">
+            <div class="navbar-collapse justify-content-between">
+
+                <div class="d-flex">
+                    <div class="nav-item">
+                        <a class="nav-link" href="#"><i
+                                class="fa-solid fa-grip-lines fa-lg"></i></a>
+                    </div>
+
+                    <div class="nav-item active">
+                        <a class="nav-link" href="#"><i class="fa-solid fa-house fa-lg"></i> <span
+                                class="sr-only">(current)</span></a>
+                    </div>
+
+                    <form class="search d-flex my-2 my-lg-0">
+                        <input class="ps-4 form-control" type="search" placeholder="Search"
+                            aria-label="Search">
+                        <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+                </div>
+
+                <div class="d-flex">
+                    <div class="nav-item add-new">
+                        <a class="nav-link" href="#" role="button">
+                            <i class="fa-solid fa-plus fa-xl"></i>
+                        </a>
+                    </div>
+                    <div class="nav-item ">
+                        <a class="nav-link" href="#" role="button">
+                            <i class="fa-regular fa-circle fa-lg"></i>
+                            <span class="tasks">
+                                <span class="no-of-completed">3</span>/10
+                            </span>
+                        </a>
+                    </div>
+                    <div class="nav-item ">
+                        <a class="nav-link" href="#" role="button">
+                            <i class="fa-regular fa-circle-question fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link " href="#"><i class="fa-regular fa-bell fa-lg"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <div class="main">
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+            lorem
+        </div>
+        <div class="sidenav">
+            <div class="inbox pb-2 pt-5">
+                <i class="fa-solid fa-inbox pe-0 fa-xl"></i> Inbox
+            </div>
+            <div class="today pb-3">
+                <i class="fa-regular fa-calendar fa-xl "></i> Today
+            </div>
+            <div class="upcoming">
+                <i class="fa-solid fa-calendar-days fa-xl"></i> Upcoming
+            </div>
+            <div class="projects"></div>
+        </div>
+        <footer class="footer">
+            <p>
+                Copyright ©
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>
+                kareemgamaal
+                <a href="https://github.com/kareemgamal1" target="_blank"><i
+                        class="fab fa-github"></i></a>
+            </p>
+        </footer>
+        <script src="main.js"></script>
+    </body>
+
+</html>

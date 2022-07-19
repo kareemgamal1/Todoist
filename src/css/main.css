@@ -1,0 +1,182 @@
+body {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  background-image: url(https://i.stack.imgur.com/jGlzr.png);
+  background-size: cover;
+}
+.main-btn {
+  border-radius: 7px;
+  border: none;
+  background-color: rgb(58, 127, 139);
+  padding: 0.3vw;
+}
+
+.input-container {
+  display: none;
+  position: absolute;
+  max-width: 100% !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.input-container::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.input-book {
+  position: relative;
+  z-index: 3;
+}
+.input-book * {
+  z-index: 3;
+}
+.input-book::before {
+  position: absolute;
+  content: "";
+  width: 125%;
+  height: 125%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 30px;
+  z-index: 3;
+}
+
+.cancel {
+  background-color: rgb(144, 54, 54) !important;
+  margin-top: 1.5%;
+}
+
+.books {
+  max-width: 80% !important;
+}
+.book-holder {
+  margin-bottom: 8rem;
+}
+.book {
+  text-align: center;
+  padding: 10% 7%;
+  background: linear-gradient(to right, #788585, #2b2b2f);
+  height: 150%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.book-buttons {
+  align-items: flex-end;
+}
+.read {
+  background: linear-gradient(to right, #40a9be, #595968);
+}
+.book h5 {
+  word-wrap: break-word;
+}
+.book-buttons {
+  flex: 1 2 auto;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.input-switch {
+  margin-bottom: 4%;
+  margin-top: 1.5%;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+.slider:after {
+  position: absolute;
+  content: "Read";
+  left: 20%;
+  bottom: -60%;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.delete {
+  background-color: rgb(144, 54, 54) !important;
+}
+
+.footer {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  width: 100%;
+  font-size: 1em;
+}
+@media (max-width: 576px) {
+  .footer {
+    position: unset;
+  }
+}
+.footer p {
+  width: fit-content;
+}
+.fa-github {
+  padding: 3px;
+  color: black;
+  transition: transform 0.3s ease-in-out;
+}
+.fa-github:hover {
+  transform: rotate(360deg) scale(1.2);
+}
