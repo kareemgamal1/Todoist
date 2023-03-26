@@ -1,0 +1,21 @@
+.footer {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  width: 100%;
+  font-size: 1em;
+}
+
+.footer p {
+  width: fit-content;
+}
+.fa-github {
+  padding: 3px;
+  color: black;
+  transition: transform 0.3s ease-in-out;
+}
+.fa-github:hover {
+  transform: rotate(360deg) scale(1.2);
+}

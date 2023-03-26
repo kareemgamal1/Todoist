@@ -1,0 +1,50 @@
+.task {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.164);
+  border-left: none;
+  border-right: none;
+  padding: 2%;
+}
+
+.task .done {
+  border: 1px solid rgba(0, 0, 0, 0.474);
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+}
+
+.task .done:hover {
+  background-color: #7d7d7d22 !important;
+}
+
+.task .task-name {
+  font-size: 1vw;
+  padding: 0% 3%;
+}
+
+.task .actions {
+  border: none;
+  background-color: white;
+}
+
+.task .fa-ellipsis {
+  color: black;
+}
+
+.actions {
+  margin-left: auto;
+}
+
+.add-task {
+  color: grey;
+  border: none;
+  outline: none;
+}
+
+.add-task i {
+  background-color: transparent;
+  color: #db4c3f;
+}

@@ -1,0 +1,68 @@
+.navbar {
+  background-color: #db4c3f;
+  z-index: 2;
+  padding: 0rem 1rem 0rem 1rem;
+}
+
+.nav-item {
+  padding: 0.5rem;
+}
+
+.nav-link {
+  position: relative;
+  padding: 5px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+}
+
+.nav-link:hover {
+  background-color: hsla(0, 0%, 100%, 0.2);
+}
+
+.nav-link::after {
+  padding: 5px;
+  position: absolute;
+  height: 3px
+}
+
+.search-form {
+  position: relative;
+}
+
+.search {
+  background-color: hsla(0, 0%, 100%, .2);
+  border: none;
+  margin: 0;
+  padding-left: 20%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  border-radius: 3px;
+}
+
+.search:focus,
+.search:hover {
+  background-color: white;
+  border: none;
+  outline: none;
+}
+
+.search::placeholder {
+  color: white;
+}
+
+.fa-magnifying-glass {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translate(-5%, -50%);
+}
+
+.search:hover::placeholder,
+.search:focus::placeholder,
+.search:focus+.fa-magnifying-glass,
+.search:hover+.fa-magnifying-glass {
+  color: #3d3d3d;
+}
