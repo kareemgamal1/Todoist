@@ -2,17 +2,17 @@
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.164);
-  border-left: none;
-  border-right: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 2%;
+  padding-bottom: 1%;
+  font-size: 0.9rem;
 }
 
 .task .done {
   border: 1px solid rgba(0, 0, 0, 0.474);
   border-radius: 50%;
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   background-color: white;
 }
 
@@ -21,8 +21,7 @@
 }
 
 .task .task-name {
-  font-size: 1vw;
-  padding: 0% 3%;
+  padding: 0% 1%;
 }
 
 .task .actions {
@@ -47,4 +46,20 @@
 .add-task i {
   background-color: transparent;
   color: #db4c3f;
+}
+
+.task-form {
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 0, 5%;
+  font-size: small;
+}
+
+.task-form input {
+  border: 0;
+  outline: 0;
+  padding: 0.5rem;
+}
+
+.task-form input:last-of-type {
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
 }

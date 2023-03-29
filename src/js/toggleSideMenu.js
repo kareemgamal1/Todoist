@@ -13,12 +13,10 @@ function toggleMenu() {
 function closeMenu() {
   if (document.querySelectorAll(".main .inbox-page").length > 0) {
     main.style.marginLeft = "auto";
-
   } else {
-    main.style.marginLeft = "15%";
+    main.style.marginLeft = "20%";
   }
   menu.style.visibility = "hidden"
-
 }
 
 menuButton.addEventListener("click", () => {
