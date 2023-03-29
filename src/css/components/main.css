@@ -1,0 +1,44 @@
+@import url('navbar.css');
+@import url('sidenav.css');
+@import url('task.css');
+@import url('footer.css');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
+.tasks {
+  color: white;
+  font-size: 0.8em;
+}
+
+i {
+  color: white;
+}
+
+.main {
+  transition: 0.5s;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  -o-transition: 0.5s;
+}
+
+.sections {
+  width: 100%;
+}
+
+.section {
+  width: 100%;
+}
+
+
+/* Footer */
+
+.add-section {
+  /* margin-left: auto; */
+}
