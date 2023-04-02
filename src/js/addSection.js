@@ -46,6 +46,16 @@ export default class Projects {
     return newTask
   }
 
+  showForm(project) {
+
+    // var form = this.closest('form');
+    // if (task.style.display === "none") {
+    //   task.style.display = "block";
+    // } else {
+    //   task.style.display = "none";
+    // }
+  }
+
   addSection(project) {
     let sectionName = Object.keys(project)[0]
     let noOfTasks = project[sectionName].length
@@ -57,17 +67,24 @@ export default class Projects {
     </div>
     <div class="tasks-list">
         ${this.addTasks(project)}
-        <button class="btn add-task">
+        <button class="btn show-task-form">
         <span>
         <i class="fa-solid fa-plus fa-xl pe-1"></i>
         </span>
         Add task</button>
-        <form class="w-100 d-flex flex-column  task-form">                  
+        <form class="w-100 d-flex flex-column task-form">                  
           <input type="text" placeholder="Name" >
-          
           <input type="text" placeholder="Description" >
-          
-          <input type="date" placeholder="Date" >
+
+          <div className="control">
+            <input type="date" placeholder="Date" >
+            <div className="control-form">
+            <button type="button" class="btn btn-light cancel-task">Cancel</button>
+            <button class="btn btn-dark submit-task">Add task</button>
+            </div>
+          </div>
+      
+
         </form>
     </div>
   </div>

@@ -37,13 +37,13 @@
   margin-left: auto;
 }
 
-.add-task {
+.show-task-form {
   color: grey;
   border: none;
   outline: none;
 }
 
-.add-task i {
+.show-task-form i {
   background-color: transparent;
   color: #db4c3f;
 }
@@ -52,6 +52,7 @@
   border: 1px solid rgba(128, 128, 128, 0.2);
   border-radius: 0, 5%;
   font-size: small;
+  visibility: hidden;
 }
 
 .task-form input {
@@ -62,4 +63,9 @@
 
 .task-form input:last-of-type {
   border-top: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.control {
+  display: flex;
+  justify-content: center;
 }

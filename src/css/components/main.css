@@ -1,5 +1,7 @@
+@import url('header.css');
 @import url('navbar.css');
 @import url('sidenav.css');
+@import url('inbox.css');
 @import url('task.css');
 @import url('footer.css');
 
@@ -9,36 +11,17 @@
 
 body {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
+  position: relative;
+  min-height: 100vh;
+  overflow-y: overlay;
 }
 
-.tasks {
-  color: white;
-  font-size: 0.8em;
-}
-
-i {
-  color: white;
-}
-
-.main {
-  transition: 0.5s;
-  -webkit-transition: 0.5s;
-  -moz-transition: 0.5s;
-  -ms-transition: 0.5s;
-  -o-transition: 0.5s;
-}
-
-.sections {
-  width: 100%;
-}
-
-.section {
-  width: 100%;
+.content-wrap {
+  padding-bottom: 2.5rem;
+  /* Footer height */
 }
 
 
-/* Footer */
-
-.add-section {
-  /* margin-left: auto; */
+.inbox-page {
+  transition: 1s;
 }
