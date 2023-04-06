@@ -3,10 +3,8 @@ let inbox = document.querySelector(".inbox-page");
 let menuButton = document.querySelector(".expand");
 menu.style.visibility = "hidden"
 
-export default class DOM {
+export class DOM {
   constructor() {
-
-    
     menuButton.addEventListener("click", () => {
       if (menu.style.visibility == "hidden") {
         this.toggleMenu();
@@ -17,7 +15,6 @@ export default class DOM {
   }
 
   toggleMenu() {
-    console.log(menu.style.visibility)
     menu.style.visibility = "visible"
     inbox.style.marginLeft = "20%";
   }
@@ -31,5 +28,7 @@ export default class DOM {
     menu.style.visibility = "hidden"
   }
 
+
 }
 new DOM()
+
