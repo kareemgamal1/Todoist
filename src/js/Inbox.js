@@ -1,37 +1,29 @@
 import { InboxDOM } from "./InboxDOM";
+import Project from "./Project";
+import Task from "./Task";
 export default class Inbox {
     constructor() {
         //data
         let currentID = 1;
+        //TODO : Turn each project into an object, each project tasks into array of Task object
         this.projects = [
-            {
-                key: currentID++,
-                name: "",
-                tasks: [
-                    { name: "I don't know honestly", description: "Yeahhh" }
-                    , { name: "I miss her", description: "idkidkidk" }]
-            },
-            {
-                key: currentID++,
-                name: "College",
-                tasks:
-                    [{ name: "Hey", description: "I need to study" }]
-            }
+            new Project(currentID++, "", new Task("I don't know honestly", "Yeahhh"), new Task("I miss her", "idk")),
+            ,
+            new Project(currentID++, "College", new Task("Hey", "I need to study"))
         ]
 
-        this.inbox = new InboxDOM() //singleton (yay design patterns)
+        this.inboxDOM = new InboxDOM() //singleton (yay design patterns)
         this.initializeProjects()
 
         this.addFormBtn = document.querySelector(".new-project .add");
         this.projectsHtml = document.querySelector(".projects");
 
-
         this.addFormBtn.addEventListener("click", () => {
             let newName = document.querySelector(".add-project-name").value;
             if (this.projectsHtml.childElementCount < 4) {
-                const newProject = { key: currentID++, name: newName, tasks: [] }
-                this.inbox.addProject(newProject);
-                this.inbox.newProjectEvents()
+                const newProject = { key: currentID++, name: newName, tasks: [], noOfTasks: 0 }
+                this.inboxDOM.addProject(newProject);
+                this.inboxDOM.newProjectEvents()
             }
         });
 
@@ -41,7 +33,7 @@ export default class Inbox {
     initializeProjects() {
         //appending to DOM
         this.projects.forEach(item => {
-            this.inbox.addProject(item)
+            this.inboxDOM.addProject(item)
         })
     }
 }

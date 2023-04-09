@@ -27,10 +27,11 @@ export class InboxDOM {
         let tasksHTML = this.projectDOM.addTasks(project);
 
         let projectName = project['name']
-        let noOfTasks = project['tasks'].length
+        // let noOfTasks = project['tasks'].length
+        let noOfTasks = project['noOfTasks']
         projectName = projectName === '' ? 'Unnamed Project' : projectName
         let projectHtml = `
-    <div class="project-${project["key"]} mb-4">
+    <div class="project-${project.ID} mb-4">
     <div class="project-name"><strong>(${projectName})</strong>
         <span class="noOfTasks">${noOfTasks}</span>
     </div>
@@ -57,6 +58,7 @@ export class InboxDOM {
         </form>
   </div>
   `
+
         this.projects.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
         this.projectDOM.addEventListeners(project)
     }
