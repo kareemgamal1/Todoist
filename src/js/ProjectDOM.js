@@ -1,18 +1,29 @@
+import Inbox from "./Inbox"
+import Task from "./Task"
+
 export default class ProjectDOM {
     constructor() {
     }
 
     addEventListeners(project) {
-        console.log(project.ID)
         const htmlItem = document.querySelector(".project-" + project.ID)
-        console.log(htmlItem)
+        let finishtask = htmlItem.querySelectorAll('.done')
         let showFormBtn = htmlItem.querySelector(".show-task-form")
         let form = htmlItem.querySelector('form')
         let cancelBtn = htmlItem.querySelector(".cancel-task")
         let addTaskBtn = htmlItem.querySelector('.submit-task')
-        showFormBtn.addEventListener('click', () => {
-            console.log("ASD")
 
+        finishtask.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const taskHTML = btn.parentElement
+                let elementClass = taskHTML.classList[1].match(/\d+/g)
+                let projectID = elementClass[0]
+                let taskID = elementClass[1]
+                this.finishTask(project, taskID)
+            })
+        })
+
+        showFormBtn.addEventListener('click', () => {
             form.style.visibility = "visible"
             showFormBtn.style.visibility = "hidden"
         }
@@ -41,36 +52,47 @@ export default class ProjectDOM {
         if (project['tasks'].length === 0)
             return tasksHTML
         project['tasks'].forEach(task => {
+            console.log(project.ID)
+
             tasksHTML +=
-                `<div class="task">
-    <button class="done"></button>
-    <div class="task-name">${task['name']}</div>
-    <div className="task-description">${task['description']}</div>
-    <button class="actions">
-      <i class="fa-solid fa-ellipsis"></i>
-    </button>
-    </div>`
+                this.TaskDOM(project, task.name, task.description)
         })
         return tasksHTML
     }
 
     addTask(project, taskName, taskDescription) {
         project['noOfTasks']++;
+        project['tasks'].push(new Task(project.ID, taskName, taskDescription))
         let noOfTasksSpan = document.querySelector('.project-' + project['ID'] + ' .noOfTasks')
         noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
-        return `<div class="task">
-    <button class="done"></button>
-    <div class="task-name">${taskName}</div>
-    <div className="task-description">${taskDescription}</div>
-    <button class="actions">
-      <i class="fa-solid fa-ellipsis"></i>
-    </button>
-    </div>`
+        return this.TaskDOM(project, taskName, taskDescription)
     }
 
-    finishTask(project, taskName, taskDescription) {
+    TaskDOM(project, taskName, taskDescription) {
+        console.log(document.querySelector("input[type=date]"))
+        return `
+             <div class="task project-${project.ID}-task-${project.taskID++}">
+            <button class="done"></button>
+            <div class="task-content d-flex flex-column w-100">
+               <div class="task-name">${taskName}</div>
+               <div class="task-description">${taskDescription}</div>
+            </div>
+            <button class="actions">
+               <i class="fa-solid fa-ellipsis"></i>
+            </button>
+         </div>`
+    }
+
+    finishTask(project, taskID) {
+        project['tasks'] = project['tasks'].filter(obj => {
+            return obj.ID !== parseInt(taskID);
+        })
         project['noOfTasks']--;
-        let noOfTasksSpan = document.querySelector('.project-' + project['key'] + ' .noOfTasks')
+
+        const elementToDelete = document.querySelector(`.project-${project.ID}-task-${taskID}`)
+        elementToDelete.remove()
+
+        let noOfTasksSpan = document.querySelector('.project-' + project.ID + ' .noOfTasks')
         noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) - 1
         //TODO Finish task adds up to the counter at the top, removes task from all across the app.
     }

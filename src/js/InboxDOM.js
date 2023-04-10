@@ -27,13 +27,11 @@ export class InboxDOM {
         let tasksHTML = this.projectDOM.addTasks(project);
 
         let projectName = project['name']
-        // let noOfTasks = project['tasks'].length
-        let noOfTasks = project['noOfTasks']
         projectName = projectName === '' ? 'Unnamed Project' : projectName
         let projectHtml = `
     <div class="project-${project.ID} mb-4">
     <div class="project-name"><strong>(${projectName})</strong>
-        <span class="noOfTasks">${noOfTasks}</span>
+        <span class="noOfTasks">${project.noOfTasks}</span>
     </div>
     <div class="tasks-list">
         ${tasksHTML}
@@ -48,7 +46,7 @@ export class InboxDOM {
           <input type="text" placeholder="Description" class="taskDescription">
 
           <div className="control">
-            <input type="date" placeholder="Date" class="taskDate">
+            <input type="date" class="taskDate" onclick="this.showPicker()" >
             <div className="control-form">
             <button type="button" class="btn btn-light cancel-task">Cancel</button>
             <button type="button" class="btn btn-dark submit-task">Add task</button>
