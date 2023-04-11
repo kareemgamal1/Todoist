@@ -2,14 +2,12 @@ import ProjectDOM from "./ProjectDOM";
 
 export class InboxDOM {
     constructor() {
-        this.projects = document.querySelector(".projects");
-        this.projectDOM = new ProjectDOM();
+        // this.projectDOM = new ProjectDOM();
 
+        this.projectsHtml = document.querySelector(".projects");
         this.addNew = document.querySelector(".add-project-btn");
         this.form = document.querySelector(".new-project");
-        this.addFormBtn = document.querySelector(".new-project .add");
         this.cancelFormBtn = document.querySelector('.new-project .cancel-add')
-        this.projectsHtml = document.querySelector(".projects");
 
         this.addNew.addEventListener("click", () => {
             this.addNew.classList.add("d-none");
@@ -24,17 +22,17 @@ export class InboxDOM {
     }
 
     addProject(project) {
-        let tasksHTML = this.projectDOM.addTasks(project);
-
+        // let tasksHTML = this.projectDOM.addTasks(project);
         let projectName = project['name']
         projectName = projectName === '' ? 'Unnamed Project' : projectName
+
         let projectHtml = `
     <div class="project-${project.ID} mb-4">
     <div class="project-name"><strong>(${projectName})</strong>
         <span class="noOfTasks">${project.noOfTasks}</span>
     </div>
     <div class="tasks-list">
-        ${tasksHTML}
+        
     </div>
     <button class="btn show-task-form">
         <span>
@@ -57,16 +55,16 @@ export class InboxDOM {
   </div>
   `
 
-        this.projects.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
-        this.projectDOM.addEventListeners(project)
-    }
-
-
-
-    newProjectEvents() {
         this.addNew.classList.remove("d-none");
         this.form.classList.add("d-none");
+        this.projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
+        // this.projectDOM.addEventListeners(project)
+        project.addTasks()
+
     }
+
+
+
     //alt for cancelBtns: Array.from(showFormBtns).map(btn => btn.nextElementSibling)
 }
 
