@@ -1,28 +1,22 @@
-import ProjectDOM from "./ProjectDOM";
-
 export class InboxDOM {
     constructor() {
-        // this.projectDOM = new ProjectDOM();
-
-        this.projectsHtml = document.querySelector(".projects");
-        this.addNew = document.querySelector(".add-project-btn");
         this.form = document.querySelector(".new-project");
+        this.addProj = document.querySelector(".add-project-btn");
         this.cancelFormBtn = document.querySelector('.new-project .cancel-add')
 
-        this.addNew.addEventListener("click", () => {
-            this.addNew.classList.add("d-none");
+        this.addProj.addEventListener("click", () => {
+            this.addProj.classList.add("d-none");
             this.form.classList.remove("d-none");
         });
 
 
         this.cancelFormBtn.addEventListener('click', () => {
-            this.addNew.classList.remove("d-none");
+            this.addProj.classList.remove("d-none");
             this.form.classList.add("d-none");
         })
     }
 
     addProject(project) {
-        // let tasksHTML = this.projectDOM.addTasks(project);
         let projectName = project['name']
         projectName = projectName === '' ? 'Unnamed Project' : projectName
 
@@ -55,11 +49,12 @@ export class InboxDOM {
   </div>
   `
 
-        this.addNew.classList.remove("d-none");
+        this.addProj.classList.remove("d-none");
         this.form.classList.add("d-none");
-        this.projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
-        // this.projectDOM.addEventListeners(project)
+        let projectsHtml = document.querySelector(".projects");
+        projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
         project.addTasks()
+        project.addEventListeners()
 
     }
 

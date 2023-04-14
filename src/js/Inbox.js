@@ -4,32 +4,28 @@ import Task from "./Task";
 
 
 export default class Inbox {
+    //Keeps track of projects, 
     constructor() {
-        let nextProjectID = 0;
-        this.nextProjectID = nextProjectID
+        this.nextProjectID = 0
         this.projects = [
-            new Project(this.nextProjectID++, "", new Task(0, "I don't know honestly", "Yeahhh", 0), new Task(1, "I miss her", "idk", 0)),
-            new Project(this.nextProjectID++, "College", new Task(0, "Hey", "I need to study", 1))
+            new Project(this.nextProjectID++, "", new Task(0, "I don't know honestly", "Yeahhh", new Date(), 0), new Task(1, "I miss her", "idk", new Date(), 0)),
+            new Project(this.nextProjectID++, "College", new Task(0, "Hey", "I need to study", new Date(), 1))
         ] //Application wide data
+
+        localStorage.setItem('projects', JSON.stringify(this.projects))
         localStorage.setItem('finishedTasks', 0)
 
         this.inboxDOM = new InboxDOM() //singleton (yay design patterns)
         this.initializeProjects()
 
-        localStorage.setItem('projects', JSON.stringify(this.projects))
 
         let addFormBtn = document.querySelector(".new-project .add");
 
         addFormBtn.addEventListener("click", () => {
             let newName = document.querySelector(".add-project-name").value;
             const newProject = new Project(this.nextProjectID++, newName)
-            console.log(newProject)
-            const projectsHtml = document.querySelector(".projects");
-            if (projectsHtml.childElementCount < 4) {
-                this.projects.push(newProject)//this duplicates array as initialize calls it
-                localStorage.setItem('projects', JSON.stringify(this.projects))
-                this.addProject(newProject)
-            }
+            this.projects.push(newProject)
+            this.addProject(newProject)
         });
 
     }
@@ -42,8 +38,8 @@ export default class Inbox {
     }
 
     addProject(project) {
+        localStorage.setItem('projects', JSON.stringify(this.projects))
         this.inboxDOM.addProject(project)
-        project.addEventListeners()
     }
 }
 new Inbox()

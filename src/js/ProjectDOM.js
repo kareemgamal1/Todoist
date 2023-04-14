@@ -24,8 +24,16 @@ export default class ProjectDOM {
         })
 
         addTaskBtn.addEventListener('click', () => {
+            let taskName = htmlItem.querySelector('.taskName')
+            console.log("taskName.value")
+            if (taskName.value.length === 0) {
+                taskName.style.border = "1px dotted red";
+                return;
+            }
+            taskName.style.border = "none"
             form.style.visibility = "hidden"
             showFormBtn.style.visibility = 'visible'
+            taskName.value = ""
         })
     }
 
@@ -36,29 +44,26 @@ export default class ProjectDOM {
         if (project['tasks'].length === 0)
             return tasksHTML
         project['tasks'].forEach(task => {
-            let newTask = new TaskDOM();
+            let newTask = new TaskDOM(); console.log(task)
             tasksHTML +=
-                newTask.addTask(project, task.name, task.description)
+                newTask.addTask(project, task.name, task.description, task.date)
         })
         tasksList.insertAdjacentHTML('beforeend', tasksHTML)
         return tasksHTML
     }
 
-    addTask(project, name, description) {
+    addTask(project, name, description, date) {
         const htmlItem = document.querySelector(".project-" + project.ID)
         let taskDOM = new TaskDOM();
-        let newTask = taskDOM.addTask(project, name.value, description.value)
+        let newTask = taskDOM.addTask(project, name.value, description.value, date.value)
         let tasks = htmlItem.querySelector('.tasks-list')
         tasks.insertAdjacentHTML('beforeend', newTask);//a cookie for all the cross site script attackers
 
         let noOfTasksSpan = document.querySelector('.project-' + project.ID + ' .noOfTasks')
         noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
-        name.value = ""
     }
 
     finishTask(taskID) {
-        let noOfCompleted = document.querySelector('.no-of-completed')
-        noOfCompleted.textContent = parseInt(noOfCompleted.textContent) + 1
     }
 
 }

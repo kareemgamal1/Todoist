@@ -8,6 +8,7 @@ export default class Project {
     this.ID = key;
     this.name = name;
     if (tasks) {
+      //Since i initialize some data from Inbox, i wanted to add the freedom of either adding tasks (initial app data) or initializing it as an empty project (as in the case of creating a new project)
       this.tasks = tasks
       this.noOfTasks = tasks.length
     }
@@ -20,7 +21,6 @@ export default class Project {
   }
 
   addEventListeners() {
-    console.log(this.ID)
     const htmlItem = document.querySelector(".project-" + this.ID)
     let finishtask = htmlItem.querySelectorAll('.done')
     let addTaskBtn = htmlItem.querySelector('.submit-task')
@@ -45,8 +45,15 @@ export default class Project {
     const htmlItem = document.querySelector(".project-" + this.ID)
     let taskName = htmlItem.querySelector('.taskName')
     let taskDescription = htmlItem.querySelector('.taskDescription')
-    const taskToAdd = new Task(this.nextTaskID, taskName.value, taskDescription.value, this.ID)
-    this.projectDOM.addTask(this, taskName, taskDescription)
+    let taskDate = htmlItem.querySelector('.taskDate')
+    if (taskName.value.length === 0) {
+      return;
+    }
+
+    console.log(taskDate.value)
+
+
+    const taskToAdd = new Task(this.nextTaskID, taskName.value, taskDescription.value, taskDate.valueAsDate, this.ID)
 
     let projects = JSON.parse(localStorage.getItem("projects") || "[]");
 
@@ -59,15 +66,16 @@ export default class Project {
     }
     )
 
-    this.tasks = x //I have raw data, i should convert it to objects
+    this.tasks = x
     this.tasks.push(taskToAdd)
     this['noOfTasks'] = this['tasks'].length;
-    console.log(this.tasks)
     projects[projectIndex] = this
     localStorage.setItem('projects', JSON.stringify(projects))
 
 
+    this.projectDOM.addTask(this, taskName, taskDescription, taskDate)
     taskToAdd.addEventListeners()
+
   }
 
   addTasks() {
@@ -75,17 +83,9 @@ export default class Project {
   }
 
   finishTask(taskID) {
-    console.log(taskID)
+    //the first part is concerned with the storage of the task itself in the project, at last, you deal with the task's removal itself, handling the DOM aspect such as increasing total number of tasks completed at top.
     const taskIndex = this.tasks.findIndex((task) => task.ID == taskID)
-    console.log(this['tasks'].at(taskIndex))
     this['tasks'].at(taskIndex).finishTask(this.ID)
     this['tasks'] = this['tasks'].filter((task) => task.ID != parseInt(taskID))
-    this.projectDOM.finishTask(taskID);
-    //TODO FIX ERROR: 
-    /*Use Case: delete two default tasks, add new one, delete it, add new one, delete it
-    Error: newly added tasks doesn't affect the Project object
-    */
-    //TODO Finish task adds up to the counter at the top, removes task from all across the app.
-
   }
 }
