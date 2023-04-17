@@ -1,3 +1,5 @@
+import Project from "./Project";
+
 export class InboxDOM {
     constructor() {
         this.form = document.querySelector(".new-project");
@@ -5,15 +7,24 @@ export class InboxDOM {
         this.cancelFormBtn = document.querySelector('.new-project .cancel-add')
 
         this.addProj.addEventListener("click", () => {
-            this.addProj.classList.add("d-none");
-            this.form.classList.remove("d-none");
+            this.showForm()
         });
 
 
         this.cancelFormBtn.addEventListener('click', () => {
-            this.addProj.classList.remove("d-none");
-            this.form.classList.add("d-none");
+            this.hideForm()
         })
+
+    }
+
+    showForm() {
+        this.addProj.classList.add("d-none");
+        this.form.classList.remove("d-none");
+    }
+
+    hideForm() {
+        this.addProj.classList.remove("d-none");
+        this.form.classList.add("d-none");
     }
 
     addProject(project) {
@@ -38,7 +49,7 @@ export class InboxDOM {
           <input type="text" placeholder="Description" class="taskDescription">
 
           <div className="control">
-            <input type="date" class="taskDate" onclick="this.showPicker()" >
+            <input type="datetime-local" class="taskDate" onclick="this.showPicker()" >
             <div className="control-form">
             <button type="button" class="btn btn-light cancel-task">Cancel</button>
             <button type="button" class="btn btn-dark submit-task">Add task</button>
@@ -49,13 +60,13 @@ export class InboxDOM {
   </div>
   `
 
-        this.addProj.classList.remove("d-none");
-        this.form.classList.add("d-none");
+        this.hideForm()
+
         let projectsHtml = document.querySelector(".projects");
         projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
-        project.addTasks()
+        project = new Project(project.ID, project.name, ...project.tasks)
+        project.updateTasks()
         project.addEventListeners()
-
     }
 
 

@@ -1,21 +1,13 @@
 import { InboxDOM } from "./InboxDOM";
 import Project from "./Project";
-import Task from "./Task";
+import LocalStorage from "./localStorage";
 
 
 export default class Inbox {
     //Keeps track of projects, 
     constructor() {
-        this.nextProjectID = 0
-        this.projects = [
-            new Project(this.nextProjectID++, "", new Task(0, "I don't know honestly", "Yeahhh", new Date(), 0), new Task(1, "I miss her", "idk", new Date(), 0)),
-            new Project(this.nextProjectID++, "College", new Task(0, "Hey", "I need to study", new Date(), 1))
-        ] //Application wide data
-
-        localStorage.setItem('projects', JSON.stringify(this.projects))
-        localStorage.setItem('finishedTasks', 0)
-
         this.inboxDOM = new InboxDOM() //singleton (yay design patterns)
+        this.localStorage = new LocalStorage();
         this.initializeProjects()
 
 
@@ -24,7 +16,6 @@ export default class Inbox {
         addFormBtn.addEventListener("click", () => {
             let newName = document.querySelector(".add-project-name").value;
             const newProject = new Project(this.nextProjectID++, newName)
-            this.projects.push(newProject)
             this.addProject(newProject)
         });
 
@@ -32,13 +23,16 @@ export default class Inbox {
 
     //pass them for the first time on dummy projects, then for each new project use eventlistener to initialize it seperately
     initializeProjects() {
-        this.projects.forEach(item => {
-            this.addProject(item)
+        this.localStorage.initialize()
+        this.projects = this.localStorage.getProjects()
+        this.nextProjectID = this.localStorage.getNextProjectID()
+        this.projects.forEach(project => {
+            this.inboxDOM.addProject(project)
         })
     }
 
     addProject(project) {
-        localStorage.setItem('projects', JSON.stringify(this.projects))
+        this.localStorage.addProject(project)
         this.inboxDOM.addProject(project)
     }
 }

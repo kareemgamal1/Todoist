@@ -1,10 +1,6 @@
 import TaskDOM from "./TaskDOM"
 
 export default class ProjectDOM {
-    constructor() {
-
-    }
-
     addEventListeners(project) {
         const htmlItem = document.querySelector(".project-" + project.ID)
         let showFormBtn = htmlItem.querySelector(".show-task-form")
@@ -25,45 +21,50 @@ export default class ProjectDOM {
 
         addTaskBtn.addEventListener('click', () => {
             let taskName = htmlItem.querySelector('.taskName')
-            console.log("taskName.value")
             if (taskName.value.length === 0) {
                 taskName.style.border = "1px dotted red";
                 return;
             }
             taskName.style.border = "none"
+            taskName.value = ""
+
             form.style.visibility = "hidden"
             showFormBtn.style.visibility = 'visible'
-            taskName.value = ""
         })
     }
 
-    addTasks(project) {
+    updateTasks(project) {
         let projectHTML = document.querySelector(`.project-${project.ID}`);
         let tasksList = projectHTML.querySelector('.tasks-list')
         let tasksHTML = ``
         if (project['tasks'].length === 0)
             return tasksHTML
-        project['tasks'].forEach(task => {
-            let newTask = new TaskDOM(); console.log(task)
-            tasksHTML +=
-                newTask.addTask(project, task.name, task.description, task.date)
+
+        project.tasks.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date)
         })
-        tasksList.insertAdjacentHTML('beforeend', tasksHTML)
+
+        project['tasks'].forEach(task => {
+            let newTask = new TaskDOM();
+            tasksHTML +=
+                newTask.addTask(project, task.name, task.description, new Date(task.date))
+        })
+        tasksList.innerHTML = tasksHTML
         return tasksHTML
     }
 
     addTask(project, name, description, date) {
         const htmlItem = document.querySelector(".project-" + project.ID)
         let taskDOM = new TaskDOM();
-        let newTask = taskDOM.addTask(project, name.value, description.value, date.value)
+
+        if (!date)
+            date = ""
+
+        let newTask = taskDOM.addTask(project, name.value, description.value, date)
         let tasks = htmlItem.querySelector('.tasks-list')
         tasks.insertAdjacentHTML('beforeend', newTask);//a cookie for all the cross site script attackers
 
         let noOfTasksSpan = document.querySelector('.project-' + project.ID + ' .noOfTasks')
         noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
     }
-
-    finishTask(taskID) {
-    }
-
 }

@@ -1,6 +1,7 @@
 import ProjectDOM from "./ProjectDOM";
 import Task from "./Task";
 import TaskDOM from "./TaskDOM";
+import LocalStorage from "./localStorage";
 
 export default class Project {
   constructor(key, name, ...tasks) {
@@ -13,13 +14,14 @@ export default class Project {
       this.noOfTasks = tasks.length
     }
     else {
-      this.tasks = [{}]
+      this.tasks = []
       this.noOfTasks = 0
     }
-    this.projectDOM = new ProjectDOM() //singleton (yay design patterns)
 
+    this.localStorage = new LocalStorage();
+
+    this.projectDOM = new ProjectDOM()
   }
-
   addEventListeners() {
     const htmlItem = document.querySelector(".project-" + this.ID)
     let finishtask = htmlItem.querySelectorAll('.done')
@@ -46,40 +48,39 @@ export default class Project {
     let taskName = htmlItem.querySelector('.taskName')
     let taskDescription = htmlItem.querySelector('.taskDescription')
     let taskDate = htmlItem.querySelector('.taskDate')
-    if (taskName.value.length === 0) {
-      return;
-    }
+    // if (taskName.value.length === 0) {
+    //   return;
+    // }
 
-    console.log(taskDate.value)
+    const taskToAdd = new Task(this.nextTaskID, taskName.value, taskDescription.value, new Date(taskDate.value), this.ID)
 
-
-    const taskToAdd = new Task(this.nextTaskID, taskName.value, taskDescription.value, taskDate.valueAsDate, this.ID)
-
-    let projects = JSON.parse(localStorage.getItem("projects") || "[]");
+    let projects = this.localStorage.getProjects()
 
     const projectIndex = projects.findIndex((p) => p.ID == this.ID)
 
     const tasksDB = projects[projectIndex]['tasks']
-    let x = tasksDB.map((task) => {
+    let newTasks = tasksDB.map((task) => {
       task.taskDOM = new TaskDOM()
       return Object.assign(new Task(), task)
     }
     )
 
-    this.tasks = x
+    this.tasks = newTasks
     this.tasks.push(taskToAdd)
     this['noOfTasks'] = this['tasks'].length;
     projects[projectIndex] = this
-    localStorage.setItem('projects', JSON.stringify(projects))
+
+    this.localStorage.setProjects(projects)
 
 
-    this.projectDOM.addTask(this, taskName, taskDescription, taskDate)
+    this.projectDOM.addTask(this, taskName, taskDescription, new Date(taskDate.value))
     taskToAdd.addEventListeners()
-
+    console.log("A")
+    this.updateTasks()
   }
 
-  addTasks() {
-    this.projectDOM.addTasks(this);
+  updateTasks() {
+    this.projectDOM.updateTasks(this);
   }
 
   finishTask(taskID) {

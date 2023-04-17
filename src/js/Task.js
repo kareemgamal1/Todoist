@@ -1,13 +1,17 @@
 import TaskDOM from "./TaskDOM";
+import LocalStorage from "./localStorage";
 
 export default class Task {
   constructor(ID, name, description, date, projectID) {
     this.ID = ID
     this.name = name;
     this.description = description
-    this.date = date
-    console.log(this.date)
+    if (date)
+      this.date = date
+
     this.projectID = projectID //optional
+
+    this.localStorage = new LocalStorage();
     this.taskDOM = new TaskDOM()//necessary for the conversion from JSON to Object
   }
 
@@ -21,7 +25,8 @@ export default class Task {
   }
 
   finishTask(projectID) {
-    let projects = JSON.parse(localStorage.getItem("projects") || "[]");
+    let projects = this.localStorage.getProjects()
+
     const projectIndex = projects.findIndex((p) => p.ID == projectID)
     let project = projects[projectIndex]
     project['tasks'] = project['tasks'].filter((task) =>
@@ -29,11 +34,8 @@ export default class Task {
     )
     project['noOfTasks'] = project['tasks'].length;
     projects[projectIndex] = project
-    localStorage.setItem('projects', JSON.stringify(projects))
-    let finishedTasks = localStorage.getItem('finishedTasks');
-    finishedTasks++;
-    localStorage.setItem('finishedTasks', finishedTasks)
 
+    this.localStorage.finishTask(projects)
     this.taskDOM.finishTask(project, this.ID)
   }
 
