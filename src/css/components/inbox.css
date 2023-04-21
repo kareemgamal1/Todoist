@@ -1,3 +1,15 @@
+.inbox-page {}
+
+@media (max-width: 576px) {
+    .navbar .left-control>*:not(:first-child) {
+        visibility: hidden;
+    }
+
+    .navbar .right-control {
+        visibility: hidden;
+    }
+}
+
 .projects {
     width: 100%;
 }

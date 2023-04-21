@@ -77,29 +77,14 @@
   box-sizing: border-box;
 }
 
-.task-date input {
+.task-date-container input {
   width: 20px;
   border: none;
 }
 
-input[type=datetime-local]::-webkit-datetime-edit {
-  color: transparent;
-  opacity: 0;
-}
-
-input[type=datetime-local]:focus::-webkit-datetime-edit {
-  width: 50px;
-  color: black !important;
-}
 
 
-.control {}
 
-::-webkit-datetime-edit-year-field:not([aria-valuenow]),
-::-webkit-datetime-edit-month-field:not([aria-valuenow]),
-::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
-  color: transparent;
-}
 
 .old {
   color: #db4c3f;

@@ -8,10 +8,12 @@ export default class Project {
     this.nextTaskID = 0;
     this.ID = key;
     this.name = name;
+    //Since i initialize some data from Inbox, i wanted to add the freedom of either adding tasks (initial app data) or initializing it as an empty project (as in the case of creating a new project)
     if (tasks) {
-      //Since i initialize some data from Inbox, i wanted to add the freedom of either adding tasks (initial app data) or initializing it as an empty project (as in the case of creating a new project)
       this.tasks = tasks
       this.noOfTasks = tasks.length
+      this.nextTaskID = tasks.length;
+
     }
     else {
       this.tasks = []
@@ -19,9 +21,15 @@ export default class Project {
     }
 
     this.localStorage = new LocalStorage();
-
-    this.projectDOM = new ProjectDOM()
+    this.projectDOM = new ProjectDOM(this)
   }
+
+  addProject() {
+    console.log(this.projectDOM)
+    this.projectDOM.addProject(this)
+  }
+
+
   addEventListeners() {
     const htmlItem = document.querySelector(".project-" + this.ID)
     let finishtask = htmlItem.querySelectorAll('.done')
@@ -48,17 +56,26 @@ export default class Project {
     let taskName = htmlItem.querySelector('.taskName')
     let taskDescription = htmlItem.querySelector('.taskDescription')
     let taskDate = htmlItem.querySelector('.taskDate')
-    // if (taskName.value.length === 0) {
-    //   return;
-    // }
 
-    const taskToAdd = new Task(this.nextTaskID, taskName.value, taskDescription.value, new Date(taskDate.value), this.ID)
+    if (taskName.value.length === 0) {
+      return;
+    }
+
+    if (taskDate.value) {
+      taskDate = new Date(taskDate.value)
+    }
+    else {
+      taskDate = new Date()
+      taskDate.setHours(0, 0, 0, 0);
+    }
+
+    const taskToAdd = new Task(this.nextTaskID++, taskName.value, taskDescription.value, taskDate, this.ID)
 
     let projects = this.localStorage.getProjects()
-
     const projectIndex = projects.findIndex((p) => p.ID == this.ID)
 
     const tasksDB = projects[projectIndex]['tasks']
+
     let newTasks = tasksDB.map((task) => {
       task.taskDOM = new TaskDOM()
       return Object.assign(new Task(), task)
@@ -69,22 +86,27 @@ export default class Project {
     this.tasks.push(taskToAdd)
     this['noOfTasks'] = this['tasks'].length;
     projects[projectIndex] = this
-
     this.localStorage.setProjects(projects)
 
-
-    this.projectDOM.addTask(this, taskName, taskDescription, new Date(taskDate.value))
-    taskToAdd.addEventListeners()
-    console.log("A")
+    this.projectDOM.addTask(this, taskToAdd)
     this.updateTasks()
+
+  }
+
+  updateTask() {
+
   }
 
   updateTasks() {
     this.projectDOM.updateTasks(this);
+    this.tasks.forEach((task) => {
+      task.addEventListeners()
+    })
   }
 
   finishTask(taskID) {
     //the first part is concerned with the storage of the task itself in the project, at last, you deal with the task's removal itself, handling the DOM aspect such as increasing total number of tasks completed at top.
+
     const taskIndex = this.tasks.findIndex((task) => task.ID == taskID)
     this['tasks'].at(taskIndex).finishTask(this.ID)
     this['tasks'] = this['tasks'].filter((task) => task.ID != parseInt(taskID))

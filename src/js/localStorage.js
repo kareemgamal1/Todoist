@@ -1,8 +1,10 @@
 import Project from "./Project";
+import ProjectDOM from "./ProjectDOM";
 import Task from "./Task";
 import TaskDOM from "./TaskDOM";
 
 export default class LocalStorage {
+
     initialize() {
         this.nextProjectID = 0;
 
@@ -22,14 +24,16 @@ export default class LocalStorage {
     }
 
     setProjects(projects) {
+        //when Date is invalid it's stored as null because it cannot be serialized
         localStorage.setItem('projects', JSON.stringify(projects))
+        projects = this.getProjects()
     }
 
     getProjects() {
         let projects = JSON.parse(localStorage.getItem("projects") || "[]");
         projects = projects.map((project) => {
             project.localStorage = new LocalStorage()
-            project.projectDOM = new TaskDOM()
+            project.projectDOM = new ProjectDOM(project)
             return Object.assign(new Project(), project)
         })
         projects.forEach((project) => {
@@ -39,7 +43,6 @@ export default class LocalStorage {
                 return Object.assign(new Task(), task)
             })
         })
-
         return projects
     }
 

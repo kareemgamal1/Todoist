@@ -6,7 +6,7 @@ import LocalStorage from "./localStorage";
 export default class Inbox {
     //Keeps track of projects, 
     constructor() {
-        this.inboxDOM = new InboxDOM() //singleton (yay design patterns)
+        this.inboxDOM = new InboxDOM(this) //singleton (yay design patterns)
         this.localStorage = new LocalStorage();
         this.initializeProjects()
 
@@ -18,7 +18,7 @@ export default class Inbox {
             const newProject = new Project(this.nextProjectID++, newName)
             this.addProject(newProject)
         });
-
+        this.inboxDOM.addEventListeners()
     }
 
     //pass them for the first time on dummy projects, then for each new project use eventlistener to initialize it seperately
@@ -27,7 +27,7 @@ export default class Inbox {
         this.projects = this.localStorage.getProjects()
         this.nextProjectID = this.localStorage.getNextProjectID()
         this.projects.forEach(project => {
-            this.inboxDOM.addProject(project)
+            project.addProject()
         })
     }
 
@@ -35,7 +35,10 @@ export default class Inbox {
         this.localStorage.addProject(project)
         this.inboxDOM.addProject(project)
     }
+
+    updateProject(projectID, projectName) {
+        this.projects[projectID].name = projectName
+        this.localStorage.setProjects(this.projects)
+    }
 }
 new Inbox()
-
-//TODO make inbox contain inboxDOM only, make Project do ProjectDOM

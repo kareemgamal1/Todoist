@@ -1,19 +1,31 @@
 export default class TaskDOM {
-   addTask(project, taskName, taskDescription, taskDate) {
+   addTask(project, task) {
+      let taskID = task.ID
+      let taskName = task.name
+      let taskDescription = task.description
+      let taskDate = task.date
+
+
       let [tDate, old] = this.formatTaskDate(taskDate)
-      taskDate = tDate
+      if (taskDate) {
+         taskDate = tDate
+      }
+      else {
+         taskDate = ""
+      }
       let oldClass = ""
       if (old)
          oldClass = "old"
+
       return `
-             <div class="task project-${project.ID}-task-${project.nextTaskID++}">
+             <div class="task project-${project.ID}-task-${taskID}">
             <button class="done"></button>
             <div class="task-content d-flex flex-column w-100">
                <div class="task-name">${taskName}</div>
                <div class="task-description">${taskDescription}</div>
-               <div class="task-date">
+               <div class="task-date-container">
                
-            <input type="datetime-local" name="task-date" > 
+            <input type="datetime-local" class="task-date" name="task-date" > 
             <label class="${oldClass}">
             ${taskDate}
             </label>
@@ -24,6 +36,10 @@ export default class TaskDOM {
                <i class="fa-solid fa-ellipsis"></i>
             </button>
          </div>`
+   }
+
+   updateTask(project, task) {
+
    }
 
    finishTask(project, taskID) {
@@ -44,6 +60,7 @@ export default class TaskDOM {
    }
 
    formatTaskDate(taskDate) {
+      taskDate = new Date(taskDate)
       var options = { day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric', hour12: true };
       let old = false
       const currentDate = new Date()
@@ -63,7 +80,6 @@ export default class TaskDOM {
       } else
          taskDate = ""
 
-      console.log(old)
       return [taskDate, old]
    }
 

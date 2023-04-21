@@ -6,9 +6,11 @@ export default class Task {
     this.ID = ID
     this.name = name;
     this.description = description
+    
     if (date)
       this.date = date
-
+    else
+      this.date = ""
     this.projectID = projectID //optional
 
     this.localStorage = new LocalStorage();
@@ -18,7 +20,6 @@ export default class Task {
   addEventListeners() {
     const htmlItem = document.querySelector(`.project-${this.projectID}-task-${this.ID}`)
     let finishtask = htmlItem.querySelector('.done')
-
     finishtask.addEventListener('click', () => {
       this.finishTask(this.projectID, this.ID)
     })
