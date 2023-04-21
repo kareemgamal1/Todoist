@@ -2,11 +2,11 @@
 
 @media (max-width: 576px) {
     .navbar .left-control>*:not(:first-child) {
-        visibility: hidden;
+        display: none !important;
     }
 
     .navbar .right-control {
-        visibility: hidden;
+        display: none !important;
     }
 }
 
