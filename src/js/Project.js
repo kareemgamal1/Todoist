@@ -25,29 +25,40 @@ export default class Project {
   }
 
   addProject() {
-    console.log(this.projectDOM)
+    this.projectDOM.addProject(this)
+    this.localStorage.addProject(this)
+  }
+
+  addProjectToDOM() {
     this.projectDOM.addProject(this)
   }
 
+  deleteProject() {
+    let projects = this.localStorage.getProjects()
+    projects = projects.filter((project) => {
+      return project.ID != this.ID
+    }
+    )
+    this.localStorage.setProjects(projects)
+    this.projectDOM.deleteProject(this)
+  }
 
   addEventListeners() {
+    console.log("S")
     const htmlItem = document.querySelector(".project-" + this.ID)
-    let finishtask = htmlItem.querySelectorAll('.done')
+    let deleteProject = htmlItem.querySelector('.deleteProject')
     let addTaskBtn = htmlItem.querySelector('.submit-task')
 
-    finishtask.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const taskHTML = btn.parentElement
-        let elementClass = taskHTML.classList[1].match(/\d+/g)
-        let taskID = elementClass[1]
-        this.finishTask(taskID)
-      })
+    deleteProject.addEventListener('click', () => {
+      this.deleteProject()
     })
 
     addTaskBtn.addEventListener('click', () => {
       this.addTask();
     }
     )
+
+
     this.projectDOM.addEventListeners(this)
   }
 
@@ -90,11 +101,6 @@ export default class Project {
 
     this.projectDOM.addTask(this, taskToAdd)
     this.updateTasks()
-
-  }
-
-  updateTask() {
-
   }
 
   updateTasks() {
@@ -104,11 +110,4 @@ export default class Project {
     })
   }
 
-  finishTask(taskID) {
-    //the first part is concerned with the storage of the task itself in the project, at last, you deal with the task's removal itself, handling the DOM aspect such as increasing total number of tasks completed at top.
-
-    const taskIndex = this.tasks.findIndex((task) => task.ID == taskID)
-    this['tasks'].at(taskIndex).finishTask(this.ID)
-    this['tasks'] = this['tasks'].filter((task) => task.ID != parseInt(taskID))
-  }
 }

@@ -1,4 +1,10 @@
+import Task from "./Task"
+import LocalStorage from "./localStorage"
+
 export default class TaskDOM {
+   constructor() {
+      this.localStorage = new LocalStorage()
+   }
    addTask(project, task) {
       let taskID = task.ID
       let taskName = task.name
@@ -50,6 +56,98 @@ export default class TaskDOM {
    deleteTask(project, taskID) {
       const elementToDelete = document.querySelector(`.project-${project.ID}-task-${taskID}`)
       elementToDelete.remove()
+   }
+
+
+
+   addEventListeners(task) {
+      const htmlItem = document.querySelector(".project-" + task.projectID + '-task-' + task.ID)
+      const editableName = htmlItem.querySelector(".task-name");
+      const editableDesc = htmlItem.querySelector(".task-description");
+
+      editableName.addEventListener('click', this.makeTextsEditable.bind(this, editableName));
+
+      editableDesc.addEventListener('click', this.makeTextsEditable.bind(this, editableDesc));
+
+      const dateInput = htmlItem.querySelector('.task .task-date-container .task-date')
+      dateInput.addEventListener('change', this.makeDateEditable.bind(this, dateInput))
+   }
+
+   makeTextsEditable(paragraphElement) {
+      if (!paragraphElement) {
+         return;
+      }
+      const paragraphClass = paragraphElement.classList
+      const projectHTML = paragraphElement.parentNode.parentNode
+      const projectClasses = projectHTML.classList[1]
+      const myRegex = /-(\d+)/g;
+      const [projectID, taskID] = projectClasses.match(myRegex).map(match => parseInt(match.slice(1)));
+      const textValue = paragraphElement.textContent;
+
+      // Replace the paragraph with an input field
+      // Check if an input element already exists in the DOM
+      let inputElement = paragraphElement.previousElementSibling;
+      if (!inputElement || inputElement.tagName !== "INPUT")
+         inputElement = document.createElement("input");
+      inputElement.type = "text";
+      inputElement.value = textValue;
+      inputElement.classList.add("editable-input")
+      paragraphElement.parentNode.insertBefore(inputElement, paragraphElement);
+
+      inputElement.onblur = () => {
+         // Update the paragraph with the new text
+         const updatedTextValue = inputElement.value;
+         paragraphElement.textContent = updatedTextValue;
+         paragraphElement.style.display = "block";
+         inputElement.style.display = "none";
+
+         let projects = this.localStorage.getProjects()
+         const projectIndex = projects.findIndex((p) => p.ID == projectID)
+
+         const tasksDB = projects[projectIndex]['tasks']
+         let newTasks = tasksDB.map((task) => {
+            task.taskDOM = new TaskDOM()
+            return Object.assign(new Task(), task)
+         }
+         )
+         if (paragraphClass[0].includes("name")) {
+            newTasks[taskID].name = updatedTextValue
+         }
+         else {
+            newTasks[taskID].description = updatedTextValue
+         }
+         projects[projectIndex].tasks = newTasks
+         this.localStorage.setProjects(projects)
+      }
+
+      paragraphElement.style.display = "none";
+      inputElement.style.display = "block";
+      // Focus on the input field
+      inputElement.focus();
+   }
+
+   makeDateEditable(input) {
+      const projectHTML = input.parentNode.parentNode.parentNode
+      const projectClasses = projectHTML.classList[1]
+      const myRegex = /-(\d+)/g;
+      const [projectID, taskID] = projectClasses.match(myRegex).map(match => parseInt(match.slice(1)));
+      let projects = this.localStorage.getProjects()
+      const projectIndex = projects.findIndex((p) => p.ID == projectID)
+
+      const tasksDB = projects[projectIndex]['tasks']
+      let newTasks = tasksDB.map((task) => {
+         task.taskDOM = new TaskDOM()
+         return Object.assign(new Task(), task)
+      }
+      )
+      newTasks[taskID].date = input.value
+      projects[projectIndex].tasks = newTasks
+      this.localStorage.setProjects(projects)
+
+      const dateText = input.nextElementSibling
+      let [formattedDate, old] = this.formatTaskDate(input.value)
+      dateText.innerText = formattedDate
+      dateText.classList.add(old ? 'old' : '')
    }
 
    updateTaskNumbers(project) {

@@ -23,6 +23,12 @@ export default class LocalStorage {
         localStorage.setItem('projects', JSON.stringify(projects))
     }
 
+    updateProject(projectID, projectName) {
+        let projects = this.getProjects()
+        projects[projectID].name = projectName
+        this.setProjects(projects)
+    }
+
     setProjects(projects) {
         //when Date is invalid it's stored as null because it cannot be serialized
         localStorage.setItem('projects', JSON.stringify(projects))

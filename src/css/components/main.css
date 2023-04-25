@@ -33,11 +33,11 @@ body {
   outline: none;
 }
 
-.project-heading:hover .deleteTask {
+.project-heading:hover .deleteProject {
   visibility: visible;
 }
 
-.deleteTask {
+.deleteProject {
   padding: 0;
   font-size: 0.8rem;
   visibility: hidden;

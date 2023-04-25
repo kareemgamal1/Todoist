@@ -6,7 +6,7 @@ export default class Task {
     this.ID = ID
     this.name = name;
     this.description = description
-    
+
     if (date)
       this.date = date
     else
@@ -14,7 +14,7 @@ export default class Task {
     this.projectID = projectID //optional
 
     this.localStorage = new LocalStorage();
-    this.taskDOM = new TaskDOM()//necessary for the conversion from JSON to Object
+    this.taskDOM = new TaskDOM(this)//necessary for the conversion from JSON to Object
   }
 
   addEventListeners() {
@@ -23,11 +23,12 @@ export default class Task {
     finishtask.addEventListener('click', () => {
       this.finishTask(this.projectID, this.ID)
     })
+    this.taskDOM.addEventListeners(this)
   }
 
   finishTask(projectID) {
+    //the first part is concerned with the storage of the task itself in the project, at last, you deal with the task's removal itself, handling the DOM aspect such as increasing total number of tasks completed at top.
     let projects = this.localStorage.getProjects()
-
     const projectIndex = projects.findIndex((p) => p.ID == projectID)
     let project = projects[projectIndex]
     project['tasks'] = project['tasks'].filter((task) =>
@@ -35,8 +36,9 @@ export default class Task {
     )
     project['noOfTasks'] = project['tasks'].length;
     projects[projectIndex] = project
-
     this.localStorage.finishTask(projects)
+
+
     this.taskDOM.finishTask(project, this.ID)
   }
 
