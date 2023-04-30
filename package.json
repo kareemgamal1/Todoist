@@ -1,12 +1,16 @@
 {
   "name": "todo-list",
   "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/kareemgamal1/Todoist.git"
+  },
   "description": "A web application that is used to add and remove certain tasks.",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack ./src/index.js ./dist/main.js",
-    "build:prod": "webpack ./src/index.js ./dist/main.js -p"
+    "build": "webpack --mode=development",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "author": "Kareemgamaaal@gmail.com",
   "license": "ISC",
@@ -27,6 +31,8 @@
   },
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "lodash": "^4.17.21"
+    "html-webpack-plugin": "^5.5.1",
+    "lodash": "^4.17.21",
+    "webpack-bundle-analyzer": "^4.8.0"
   }
 }

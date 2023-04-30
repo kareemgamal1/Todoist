@@ -1,12 +1,15 @@
 const path = require("path");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  mode: "development",
   entry: "./src/index.js",
   output: {
-    filename: "main.js",
     path: path.join(__dirname, "dist"),
+    filename: "main.js",
   },
-  mode: "development",
+
   module: {
     rules: [
       {
@@ -14,18 +17,10 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: "asset/resource",
+        test: /\.(jpe?g|svg|png|gif|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
+        type: 'asset/resource',
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2?)$/,
-        use: {
-          loader: 'file-loader'
-          , options: {
-            name: '../css/fonts/[name]-[hash:8].[ext]'
-          }
-        }
-      }, {
         test: /\.m?js$/,
         exclude: /node_modules/,
         use: {
@@ -36,7 +31,20 @@ module.exports = {
             ], compact: false
           }
         }
-      }
+      },
     ],
   }, watch: true,
+  plugins: [
+    new BundleAnalyzerPlugin(),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+    }),
+  ],
+  resolve: {
+    modules: [
+      path.resolve(__dirname, 'src'),
+      'node_modules'
+    ]
+  },
 };
