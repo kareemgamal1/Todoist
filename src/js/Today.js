@@ -4,15 +4,16 @@ import LocalStorage from "./localStorage";
 
 export default class Today {
     constructor() {
+        this.todayDOM = new TodayDOM()
         this.localStorage = new LocalStorage()
         this.projects = this.localStorage.getProjects()
-        this.todayDOM = new TodayDOM()
         this.tasks = []
     }
 
     initialize() {
         this.projects.forEach(project => {
             project.tasks.forEach(task => {
+                task.location = 'today'
                 this.tasks.push(task)
             })
         })
@@ -21,6 +22,8 @@ export default class Today {
         this.tasks = this.tasks.filter((task) =>
             new Date(task.date).toDateString() === today.toDateString()
         )
+
+        this.localStorage.setToday(this.tasks)
         this.todayDOM.initialize(this)
     }
 
@@ -42,37 +45,19 @@ export default class Today {
             taskDate.setHours(0, 0, 0, 0);
         }
 
-        const taskToAdd = new Task(this.nextTaskID++, taskName.value, taskDescription.value, taskDate, this.ID)
+        const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate, this.ID, 1)
 
-        let projects = this.localStorage.getProjects()
-        const projectIndex = projects.findIndex((p) => p.ID == this.ID)
-
-        const tasksDB = projects[projectIndex]['tasks']
-
-        let newTasks = tasksDB.map((task) => {
-            task.taskDOM = new TaskDOM()
-            return Object.assign(new Task(), task)
-        }
-        )
-
-        this.tasks = newTasks
         this.tasks.push(taskToAdd)
-        this['noOfTasks'] = this['tasks'].length;
-        projects[projectIndex] = this
-        this.localStorage.setProjects(projects)
 
-        this.projectDOM.addTask(this, taskToAdd)
+        this.noOfTasks = this.tasks.length;
+
+        this.todayDOM.addTask(this, taskToAdd)
         this.updateTasks()
     }
 
     addEventListeners() {
         const htmlItem = document.querySelector(".today")
-        let deleteProject = htmlItem.querySelector('.deleteProject')
         let addTaskBtn = htmlItem.querySelector('.submit-task')
-
-        // deleteProject.addEventListener('click', () => {
-        // this.deleteProject()
-        // })
 
         addTaskBtn.addEventListener('click', () => {
             this.addTask();
@@ -86,6 +71,13 @@ export default class Today {
         this.tasks.forEach((task) => {
             task.addEventListeners()
         })
+    }
+
+    updateTaskName(taskID, name) {
+        let todayTasks = this.localStorage.getToday()
+        let taskIndex = -1
+        taskIndex = todayTasks.findIndex((t) => t.ID == taskID)
+        todayTasks[taskIndex].name = name
     }
 }
 new Today().initialize()

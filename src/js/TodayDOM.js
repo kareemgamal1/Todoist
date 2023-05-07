@@ -1,6 +1,4 @@
-import Project from "./Project"
 import TaskDOM from "./TaskDOM";
-import Today from "./Today";
 
 export default class TodayDOM {
     initialize(today) {
@@ -37,6 +35,15 @@ export default class TodayDOM {
         today.addEventListeners()
     }
 
+    addTask(task) {
+        const htmlItem = document.querySelector(".today")
+        let taskDOM = new TaskDOM();
+        let newTask = taskDOM.addTask(task)
+        let tasks = htmlItem.querySelector('.tasks-list')
+        tasks.innerHTML += newTask
+    }
+
+
     updateTasks(project) {
         let projectHTML = document.querySelector(".today");
         let tasksList = projectHTML.querySelector('.tasks-list')
@@ -51,13 +58,13 @@ export default class TodayDOM {
         project['tasks'].forEach(task => {
             let newTask = new TaskDOM();
             tasksHTML +=
-                newTask.addTask(project, task)
+                newTask.addTask(task)
         })
         tasksList.innerHTML = tasksHTML
         return tasksHTML
     }
 
-    addEventListeners(project) {
+    addEventListeners() {
         const htmlItem = document.querySelector(".today")
         let showFormBtn = htmlItem.querySelector(".show-task-form")
         let form = htmlItem.querySelector('form')

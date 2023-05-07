@@ -97,7 +97,7 @@ export default class ProjectDOM {
             showFormBtn.style.visibility = 'visible'
         })
 
-        const editableProject = document.querySelector(".project-name");
+        const editableProject = htmlItem.querySelector(".project-name");
 
         editableProject.addEventListener('click', this.makeProjectEditable.bind(this, editableProject));
     }
@@ -113,26 +113,25 @@ export default class ProjectDOM {
             return new Date(a.date) - new Date(b.date)
         })
 
-        project['tasks'].forEach(task => {
+        project.tasks.forEach(task => {
             let newTask = new TaskDOM();
             tasksHTML +=
-                newTask.addTask(project, task)
+                newTask.addTask(task)
         })
         tasksList.innerHTML = tasksHTML
         return tasksHTML
     }
 
-    addTask(project, task) {
-        const htmlItem = document.querySelector(".project-" + project.ID)
+    addTask(task) {
+        const htmlItem = document.querySelector(`.${task.location}`)
         let taskDOM = new TaskDOM();
 
-        let newTask = taskDOM.addTask(project, task)
-        console.log(newTask)
+        let newTask = taskDOM.addTask(task)
         let tasks = htmlItem.querySelector('.tasks-list')
         tasks.innerHTML += newTask
         // tasks.insertAdjacentHTML('beforeend', newTask);//a cookie for all the cross site script attackers
 
-        let noOfTasksSpan = document.querySelector('.project-' + project.ID + ' .noOfTasks')
+        let noOfTasksSpan = document.querySelector(`.${task.location} .noOfTasks`)
         noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
     }
 
