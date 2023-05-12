@@ -46,6 +46,9 @@ export default class ProjectDOM {
         let projectsHtml = document.querySelector(".projects");
         projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
         project = new Project(project.ID, project.name, ...project.tasks)
+        project.tasks.forEach(task => {
+            task.location = `project-${project.ID}`
+        })
         project.updateTasks()
         project.addEventListeners()
     }
@@ -106,20 +109,18 @@ export default class ProjectDOM {
         let projectHTML = document.querySelector(`.project-${project.ID}`);
         let tasksList = projectHTML.querySelector('.tasks-list')
         let tasksHTML = ``
-        if (project['tasks'].length === 0)
-            return tasksHTML
 
         project.tasks.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
         })
 
         project.tasks.forEach(task => {
+            task.location = `project-${project.ID}`
             let newTask = new TaskDOM();
             tasksHTML +=
                 newTask.addTask(task)
         })
         tasksList.innerHTML = tasksHTML
-        return tasksHTML
     }
 
     addTask(task) {

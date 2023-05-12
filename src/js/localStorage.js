@@ -15,13 +15,13 @@ export default class LocalStorage {
             new Project(
                 this.nextProjectID++,
                 "",
-                new Task("I don't know honestly", "Yeahhh", new Date("6/1/2023"), 0, 0),
-                new Task("I miss her", "idk", new Date(), 0, 0)
+                new Task("I don't know honestly", "Yeahhh", new Date("6/1/2023"), 0),
+                new Task("I miss her", "idk", new Date(), 0)
             ),
             new Project(
                 this.nextProjectID++,
                 "College",
-                new Task("Hey", "I need to study", new Date(), 1, 0)
+                new Task("Hey", "I need to study", new Date(), 0)
             )
         ];
 
@@ -85,7 +85,7 @@ export default class LocalStorage {
     }
     getToday() {
         let todayTasks = JSON.parse(localStorage.getItem("today") || "[]");
-        todayTasks.forEach((task) => {
+        todayTasks = todayTasks.map((task) => {
             task.localStorage = new LocalStorage();
             task.taskDOM = new TaskDOM();
             return Object.assign(new Task(), task);

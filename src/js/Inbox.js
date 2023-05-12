@@ -1,6 +1,7 @@
 import { InboxDOM } from "./InboxDOM";
 import Project from "./Project";
 import LocalStorage from "./localStorage";
+import Today from "./Today";
 
 
 export default class Inbox {
@@ -9,7 +10,8 @@ export default class Inbox {
         this.inboxDOM = new InboxDOM(this) //singleton (yay design patterns)
         this.localStorage = new LocalStorage();
         this.initializeProjects()
-
+        let today = new Today()
+        today.initialize()
         let addFormBtn = document.querySelector(".new-project .add");
 
         addFormBtn.addEventListener("click", () => {

@@ -1,17 +1,18 @@
+const sidenav = document.querySelector('.sidenav');
+const content = document.querySelector('.content-wrap');
+
+
 let menu = document.querySelector(".sidenav");
 let inbox = document.querySelector(".inbox-page");
 let menuButton = document.querySelector(".expand");
-menu.style.visibility = "hidden"
 
 export class DOM {
   constructor() {
-    menuButton.addEventListener("click", () => {
-      if (menu.style.visibility == "hidden") {
-        this.toggleMenu();
-      } else {
-        this.closeMenu();
-      }
+    menuButton.addEventListener('click', () => {
+      console.log('s')
+      sidenav.classList.toggle('active');
     });
+
   }
 
   toggleMenu() {

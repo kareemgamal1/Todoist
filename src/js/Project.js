@@ -1,12 +1,13 @@
 import ProjectDOM from "./ProjectDOM";
 import Task from "./Task";
 import TaskDOM from "./TaskDOM";
+import Today from "./Today";
 import LocalStorage from "./localStorage";
+// import Today from "./Today";
 
 export default class Project {
   constructor(key, name, ...tasks) {
     // Initialize project properties
-    this.nextTaskID = 0;
     this.ID = key;
     this.name = name;
 
@@ -14,7 +15,6 @@ export default class Project {
     if (tasks) {
       this.tasks = tasks;
       this.noOfTasks = tasks.length;
-      this.nextTaskID = tasks.length;
     } else {
       this.tasks = [];
       this.noOfTasks = 0;
@@ -69,9 +69,7 @@ export default class Project {
   // Add a new task to the project
   addTask() {
     const htmlItem = document.querySelector(".project-" + this.ID);
-    let taskName = htmlItem.querySelector('.taskName');
-    let taskDescription = htmlItem.querySelector('.taskDescription');
-    let taskDate = htmlItem.querySelector('.taskDate');
+    let [taskName, taskDescription, taskDate] = htmlItem.querySelectorAll('.taskName, .taskDescription, .taskDate');
 
     // Validate the task name
     if (taskName.value.length === 0) {
@@ -87,7 +85,7 @@ export default class Project {
     }
 
     // Create a new task object and add it to the project's tasks array
-    const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate, this.ID, 0);
+    const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate, 0);
     let projects = this.localStorage.getProjects();
     const projectIndex = projects.findIndex((p) => p.ID == this.ID);
     const tasksDB = projects[projectIndex]['tasks'];
@@ -101,15 +99,30 @@ export default class Project {
     projects[projectIndex] = this;
     this.localStorage.setProjects(projects);
 
+
+
     // Add the new task to the project's DOM and update the tasks
+    taskToAdd.initialize()
     this.projectDOM.addTask(taskToAdd);
     this.updateTasks();
+
+    //Check if date is today, then add it to Today tasks
+    const today = new Date()
+    const isToday = taskDate.getDate() === today.getDate() &&
+      taskDate.getMonth() === today.getMonth() &&
+      taskDate.getFullYear() === today.getFullYear()
+    if (isToday) {
+      let today = new Today()
+      today.addTaskFromOutside(taskToAdd)
+    }
+
   }
 
   // Update the project's tasks in the DOM and add event listeners to the tasks
   updateTasks() {
     this.projectDOM.updateTasks(this);
     this.tasks.forEach((task) => {
+      task.location = `project-${this.ID}`
       task.addEventListeners();
     });
   }

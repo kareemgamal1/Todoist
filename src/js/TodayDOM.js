@@ -36,7 +36,7 @@ export default class TodayDOM {
     }
 
     addTask(task) {
-        const htmlItem = document.querySelector(".today")
+        const htmlItem = document.querySelector(".today-page")
         let taskDOM = new TaskDOM();
         let newTask = taskDOM.addTask(task)
         let tasks = htmlItem.querySelector('.tasks-list')
@@ -44,28 +44,30 @@ export default class TodayDOM {
     }
 
 
-    updateTasks(project) {
-        let projectHTML = document.querySelector(".today");
-        let tasksList = projectHTML.querySelector('.tasks-list')
+    updateTasks(today) {
+        let todayHTML = document.querySelector(".today-page");
+        let tasksList = todayHTML.querySelector('.tasks-list')
         let tasksHTML = ``
-        if (project['tasks'].length === 0)
-            return tasksHTML
+        if (today['tasks'].length === 0)
+            tasksList.innerHTML = tasksHTML
 
-        project.tasks.sort((a, b) => {
+        today.tasks.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
         })
 
-        project['tasks'].forEach(task => {
+        today.tasks.forEach(task => {
+            task.locationID = '1'
+            task.location = 'today'
             let newTask = new TaskDOM();
             tasksHTML +=
                 newTask.addTask(task)
         })
+        console.log(tasksList)
         tasksList.innerHTML = tasksHTML
-        return tasksHTML
     }
 
     addEventListeners() {
-        const htmlItem = document.querySelector(".today")
+        const htmlItem = document.querySelector(".today-page")
         let showFormBtn = htmlItem.querySelector(".show-task-form")
         let form = htmlItem.querySelector('form')
         let cancelBtn = htmlItem.querySelector(".cancel-task")

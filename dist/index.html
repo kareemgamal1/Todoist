@@ -32,51 +32,72 @@ a checkbox that removes it (or move it to finished tasks), a delete button that 
     <script defer src="main.js"></script></head>
 
     <body>
+        <nav class="navbar navbar-light ">
+        
+            <div class="d-flex align-items-center left-control">
+                <div class="nav-item expand">
+                    <a class="nav-link" href="#"><i class="fa-solid fa-grip-lines fa-lg"></i></a>
+                </div>
+                <div class="nav-item active">
+                    <a class="nav-link" href="#"><i class="fa-solid fa-house fa-lg"></i> <span
+                            class="sr-only">(current)</span></a>
+                </div>
+                <form class="search-form d-flex my-2 my-lg-0">
+                    <input class="search " type="search" placeholder="Search" aria-label="Search">
+                    <i class="fa-solid fa-magnifying-glass "></i>
+                </form>
+            </div>
+            <div class="d-flex  right-control">
+                <div class="nav-item add-new">
+                    <a class="nav-link" href="#" role="button">
+                        <i class="fa-solid fa-plus fa-xl"></i>
+                    </a>
+                </div>
+        
+                <div class="nav-item ">
+                    <a class="nav-link" href="#" role="button">
+                        <i class="fa-regular fa-circle fa-lg"></i>
+                        <span class="tasks">
+                            <span class="no-of-completed">0</span>/10
+                        </span>
+                    </a>
+                </div>
+        
+                <div class="nav-item ">
+                    <a class="nav-link" href="#" role="button">
+                        <i class="fa-regular fa-circle-question fa-lg"></i>
+                    </a>
+                </div>
+        
+                <div class="nav-item">
+                    <a class="nav-link " href="#"><i class="fa-regular fa-bell fa-lg"></i></a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidenav">
+            <div class="side-button inbox pt-4">
+                <a href="#">
+                    <i class="fa-solid fa-inbox  fa-lg"></i>
+                    <span>Inbox</span>
+                </a>
+            </div>
+            <div class="side-button today">
+                <a href="#">
+                    <i class="fa-regular fa-calendar fa-lg "></i>
+                    <span> Today</span>
+                </a>
+            </div>
+            <div class="side-button upcoming">
+                <a href="#">
+                    <i class="fa-solid fa-calendar-days fa-lg"></i>
+                    <span> Upcoming</span>
+                </a>
+            </div>
+        </div>
+        
         <div class="content-wrap">
-            <nav class="navbar navbar-light ">
-
-                <div class="d-flex align-items-center left-control">
-                    <div class="nav-item expand">
-                        <a class="nav-link" href="#"><i
-                                class="fa-solid fa-grip-lines fa-lg"></i></a>
-                    </div>
-                    <div class="nav-item active">
-                        <a class="nav-link" href="#"><i class="fa-solid fa-house fa-lg"></i> <span
-                                class="sr-only">(current)</span></a>
-                    </div>
-                    <form class="search-form d-flex my-2 my-lg-0">
-                        <input class="search " type="search" placeholder="Search"
-                            aria-label="Search">
-                        <i class="fa-solid fa-magnifying-glass "></i>
-                    </form>
-                </div>
-                <div class="d-flex  right-control">
-                    <div class="nav-item add-new">
-                        <a class="nav-link" href="#" role="button">
-                            <i class="fa-solid fa-plus fa-xl"></i>
-                        </a>
-                    </div>
-
-                    <div class="nav-item ">
-                        <a class="nav-link" href="#" role="button">
-                            <i class="fa-regular fa-circle fa-lg"></i>
-                            <span class="tasks">
-                                <span class="no-of-completed">0</span>/10
-                            </span>
-                        </a>
-                    </div>
-
-                    <div class="nav-item ">
-                        <a class="nav-link" href="#" role="button">
-                            <i class="fa-regular fa-circle-question fa-lg"></i>
-                        </a>
-                    </div>
-
-                    <div class="nav-item">
-                        <a class="nav-link " href="#"><i class="fa-regular fa-bell fa-lg"></i></a>
-                    </div>
-                </div>
-            </nav>
+           
 
 
             <div class="inbox-page container pt-5 p-1 ">
@@ -108,26 +129,7 @@ a checkbox that removes it (or move it to finished tasks), a delete button that 
                 </div>
             </div>
 
-            <div class="sidenav">
-                <div class="side-button inbox pt-4">
-                    <a href="#">
-                        <i class="fa-solid fa-inbox  fa-lg"></i>
-                        <span>Inbox</span>
-                    </a>
-                </div>
-                <div class="side-button today">
-                    <a href="#">
-                        <i class="fa-regular fa-calendar fa-lg "></i>
-                        <span> Today</span>
-                    </a>
-                </div>
-                <div class="side-button upcoming">
-                    <a href="#">
-                        <i class="fa-solid fa-calendar-days fa-lg"></i>
-                        <span> Upcoming</span>
-                    </a>
-                </div>
-            </div>
+            
 
         </div>
 
