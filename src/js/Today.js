@@ -1,31 +1,16 @@
 import Task from "./Task";
-import TodayDOM from "./TodayDOM";
+import TodayDOM from "./DOM/TodayDOM";
 import LocalStorage from "./localStorage";
 
 export default class Today {
     constructor() {
         this.todayDOM = new TodayDOM()
         this.localStorage = new LocalStorage()
-        this.projects = this.localStorage.getProjects()
-        this.tasks = this.localStorage.getToday()
+        this.tasks = this.localStorage.getTodayTasks()
     }
 
     initialize() {
-        this.tasks = []
-        this.projects.forEach(project => {
-            project.tasks.forEach(task => {
-                task.locationID = '1'
-                task.location = 'today'
-                this.tasks.push(task)
-            })
-        })
-        let today = new Date()
-        this.tasks = this.tasks.filter((task) =>
-            new Date(task.date).toDateString() === today.toDateString()
-        )
-        this.localStorage.setToday(this.tasks)
         this.todayDOM.initialize(this)
-
     }
 
     addTask() {
@@ -49,9 +34,9 @@ export default class Today {
 
         const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate, 1)
 
-        this.tasks = this.localStorage.getToday()
+        this.tasks = this.localStorage.getTodayTasks()
         this.tasks.push(taskToAdd)
-        this.localStorage.setToday(this.tasks)
+        this.localStorage.setTodayTasks(this.tasks)
         this.noOfTasks = this.tasks.length;
 
         this.todayDOM.addTask(this, taskToAdd)
@@ -59,12 +44,9 @@ export default class Today {
     }
 
     addTaskFromOutside(task) {
-        task.locationID = 1
-        task.location = "today"
         this.tasks.push(task)
-
         this.noOfTasks = this.tasks.length;
-        this.localStorage.setToday(this.tasks)
+        this.localStorage.setTodayTasks(this.tasks)
         this.todayDOM.addTask(task)
         this.updateTasks()
     }
@@ -82,14 +64,15 @@ export default class Today {
 
     updateTasks() {
         let today = new Date()
-        this.tasks = this.localStorage.getToday()
+        this.tasks = this.localStorage.getTodayTasks()
         this.tasks = this.tasks.filter((task) =>
             new Date(task.date).toDateString() === today.toDateString()
         )
-        this.localStorage.setToday(this.tasks)
+
+        this.localStorage.setTodayTasks(this.tasks)
         this.todayDOM.updateTasks(this);
-        this.tasks.forEach((task) => {
-            task.addEventListeners()
-        })
+        this.tasks.forEach(task =>
+            task.addEventListenersAt("today")
+        )
     }
 }

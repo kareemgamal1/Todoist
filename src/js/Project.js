@@ -1,14 +1,12 @@
-import ProjectDOM from "./ProjectDOM";
+import ProjectDOM from "./DOM/ProjectDOM";
 import Task from "./Task";
-import TaskDOM from "./TaskDOM";
-import Today from "./Today";
+import TaskDOM from "./DOM/TaskDOM";
 import LocalStorage from "./localStorage";
-// import Today from "./Today";
 
 export default class Project {
-  constructor(key, name, ...tasks) {
+  constructor(name, ...tasks) {
     // Initialize project properties
-    this.ID = key;
+    this.ID = this.generateRandomId();
     this.name = name;
 
     // Initialize the project's tasks array with the provided tasks, or as an empty array
@@ -21,8 +19,19 @@ export default class Project {
     }
 
     // Create instances of LocalStorage and ProjectDOM classes
+    this.projectDOM = new ProjectDOM();
     this.localStorage = new LocalStorage();
-    this.projectDOM = new ProjectDOM(this);
+  }
+
+  generateRandomId() {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < 10; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+    return result;
   }
 
   // Add the project to the local storage and the DOM
@@ -42,6 +51,7 @@ export default class Project {
     projects = projects.filter((project) => {
       return project.ID != this.ID;
     });
+
     this.localStorage.setProjects(projects);
     this.projectDOM.deleteProject(this);
   }
@@ -85,7 +95,20 @@ export default class Project {
     }
 
     // Create a new task object and add it to the project's tasks array
-    const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate, 0);
+    const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate);
+
+    this.addTaskToLocalStorage(taskToAdd)
+
+    taskToAdd.projectID = this.ID
+    taskToAdd.initialize()
+    taskToAdd.addTask()
+    taskToAdd.addEventListeners()
+
+    // Add the new task to the project's DOM and update the tasks
+    this.updateTasks();
+  }
+
+  addTaskToLocalStorage(task) {
     let projects = this.localStorage.getProjects();
     const projectIndex = projects.findIndex((p) => p.ID == this.ID);
     const tasksDB = projects[projectIndex]['tasks'];
@@ -94,36 +117,13 @@ export default class Project {
       return Object.assign(new Task(), task);
     });
     this.tasks = newTasks;
-    this.tasks.push(taskToAdd);
+    this.tasks.push(task);
     this['noOfTasks'] = this['tasks'].length;
     projects[projectIndex] = this;
     this.localStorage.setProjects(projects);
-
-
-
-    // Add the new task to the project's DOM and update the tasks
-    taskToAdd.initialize()
-    this.projectDOM.addTask(taskToAdd);
-    this.updateTasks();
-
-    //Check if date is today, then add it to Today tasks
-    const today = new Date()
-    const isToday = taskDate.getDate() === today.getDate() &&
-      taskDate.getMonth() === today.getMonth() &&
-      taskDate.getFullYear() === today.getFullYear()
-    if (isToday) {
-      let today = new Today()
-      today.addTaskFromOutside(taskToAdd)
-    }
-
   }
-
   // Update the project's tasks in the DOM and add event listeners to the tasks
   updateTasks() {
     this.projectDOM.updateTasks(this);
-    this.tasks.forEach((task) => {
-      task.location = `project-${this.ID}`
-      task.addEventListeners();
-    });
   }
 }

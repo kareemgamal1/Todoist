@@ -3,6 +3,9 @@
   z-index: 2;
   padding: 0rem 2rem 0rem 2rem;
   max-width: 100%;
+  position: sticky;
+  top: 0;
+  left: 0;
 }
 
 .nav-item {

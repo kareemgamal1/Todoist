@@ -1,6 +1,5 @@
-import Project from "./Project";
 import TaskDOM from "./TaskDOM"
-import LocalStorage from "./localStorage";
+import LocalStorage from "../localStorage";
 
 export default class ProjectDOM {
     constructor() {
@@ -45,12 +44,12 @@ export default class ProjectDOM {
 
         let projectsHtml = document.querySelector(".projects");
         projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
-        project = new Project(project.ID, project.name, ...project.tasks)
+
         project.tasks.forEach(task => {
             task.location = `project-${project.ID}`
         })
         project.updateTasks()
-        project.addEventListeners()
+        // project.addEventListeners()
     }
 
     deleteProject(project) {
@@ -115,22 +114,24 @@ export default class ProjectDOM {
         })
 
         project.tasks.forEach(task => {
-            task.location = `project-${project.ID}`
+            const location = `project-${project.ID}`
             let newTask = new TaskDOM();
             tasksHTML +=
-                newTask.addTask(task)
+                newTask.addTask(task, location)
         })
         tasksList.innerHTML = tasksHTML
+        // project.tasks.forEach(task => {
+        //     task.addEventListenersAt(`project-${project.ID}`)
+        // })
     }
 
     addTask(task) {
         const htmlItem = document.querySelector(`.${task.location}`)
         let taskDOM = new TaskDOM();
 
-        let newTask = taskDOM.addTask(task)
+        let newTask = taskDOM.addTask(this)
         let tasks = htmlItem.querySelector('.tasks-list')
         tasks.innerHTML += newTask
-        // tasks.insertAdjacentHTML('beforeend', newTask);//a cookie for all the cross site script attackers
 
         let noOfTasksSpan = document.querySelector(`.${task.location} .noOfTasks`)
         noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
@@ -143,8 +144,8 @@ export default class ProjectDOM {
 
         const projectHTML = paragraphElement.parentNode.parentNode
         const projectClasses = projectHTML.classList[0]
-        const myRegex = /-(\d+)/;
-        const projectID = projectClasses.match(myRegex)[1];
+        const myRegex = /(?<=project-)[^-]+/;
+        const projectID = projectClasses.match(myRegex)[0];
 
         const textValue = paragraphElement.textContent;
 
@@ -178,6 +179,4 @@ export default class ProjectDOM {
         // Focus on the input field
         inputElement.focus();
     }
-
-    //alt for cancelBtns: Array.from(showFormBtns).map(btn => btn.nextElementSibling)
 }

@@ -33,10 +33,10 @@ a checkbox that removes it (or move it to finished tasks), a delete button that 
 
     <body>
         <nav class="navbar navbar-light ">
-        
+
             <div class="d-flex align-items-center left-control">
                 <div class="nav-item expand">
-                    <a class="nav-link" href="#"><i class="fa-solid fa-grip-lines fa-lg"></i></a>
+                    <a class="nav-link" ><i class="fa-solid fa-grip-lines fa-lg"></i></a>
                 </div>
                 <div class="nav-item active">
                     <a class="nav-link" href="#"><i class="fa-solid fa-house fa-lg"></i> <span
@@ -53,7 +53,7 @@ a checkbox that removes it (or move it to finished tasks), a delete button that 
                         <i class="fa-solid fa-plus fa-xl"></i>
                     </a>
                 </div>
-        
+
                 <div class="nav-item ">
                     <a class="nav-link" href="#" role="button">
                         <i class="fa-regular fa-circle fa-lg"></i>
@@ -62,13 +62,13 @@ a checkbox that removes it (or move it to finished tasks), a delete button that 
                         </span>
                     </a>
                 </div>
-        
+
                 <div class="nav-item ">
                     <a class="nav-link" href="#" role="button">
                         <i class="fa-regular fa-circle-question fa-lg"></i>
                     </a>
                 </div>
-        
+
                 <div class="nav-item">
                     <a class="nav-link " href="#"><i class="fa-regular fa-bell fa-lg"></i></a>
                 </div>
@@ -77,30 +77,28 @@ a checkbox that removes it (or move it to finished tasks), a delete button that 
 
         <div class="sidenav">
             <div class="side-button inbox pt-4">
-                <a href="#">
+                <a href="#" id="inbox-page" data-target-id="inbox-page">
                     <i class="fa-solid fa-inbox  fa-lg"></i>
                     <span>Inbox</span>
                 </a>
             </div>
             <div class="side-button today">
-                <a href="#">
+                <a href="#" id="today-page" data-target-id="today-page">
                     <i class="fa-regular fa-calendar fa-lg "></i>
                     <span> Today</span>
                 </a>
             </div>
             <div class="side-button upcoming">
-                <a href="#">
+                <a href="#" id="upcoming-page" data-target-id="upcoming-page">
                     <i class="fa-solid fa-calendar-days fa-lg"></i>
                     <span> Upcoming</span>
                 </a>
             </div>
         </div>
-        
+
         <div class="content-wrap">
-           
 
-
-            <div class="inbox-page container pt-5 p-1 ">
+            <div class="inbox-page page container pt-5 p-1 " id="inbox-page">
                 <h2>Inbox</h2>
                 <div
                     class="inbox-content d-flex flex-column justify-content-center align-items-center">
@@ -122,14 +120,14 @@ a checkbox that removes it (or move it to finished tasks), a delete button that 
                 </div>
             </div>
 
-            <div class="today-page container pt-5 p-1">
-                <div class="heading d-flex gap-1 align-items-center">
-                    <h4><strong>Today</strong></h4>
-                    <small>Fri 21 Apr</small>
-                </div>
+            <div class="today-page page container pt-5 p-1" id="today-page">
+
             </div>
 
-            
+            <div class="upcoming-page page container pt-5 p-1" id="upcoming-page">
+
+            </div>
+
 
         </div>
 

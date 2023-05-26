@@ -2,7 +2,13 @@ import TaskDOM from "./TaskDOM";
 
 export default class TodayDOM {
     initialize(today) {
+        const date = new Date();
+        const formattedDate = date.toLocaleString("en-us", { weekday: "short", day: "numeric", month: "short" });
         let tasksHTML = `
+                        <div class="heading d-flex gap-1 align-items-center">
+                    <h4><strong>Today</strong></h4>
+                    <small>${formattedDate}</small>
+                </div>
         <div class="today">
 <div class="tasks-list">
     </div>
@@ -38,7 +44,7 @@ export default class TodayDOM {
     addTask(task) {
         const htmlItem = document.querySelector(".today-page")
         let taskDOM = new TaskDOM();
-        let newTask = taskDOM.addTask(task)
+        let newTask = taskDOM.addTask(task, 'today')
         let tasks = htmlItem.querySelector('.tasks-list')
         tasks.innerHTML += newTask
     }
@@ -60,9 +66,8 @@ export default class TodayDOM {
             task.location = 'today'
             let newTask = new TaskDOM();
             tasksHTML +=
-                newTask.addTask(task)
+                newTask.addTask(task, 'today')
         })
-        console.log(tasksList)
         tasksList.innerHTML = tasksHTML
     }
 

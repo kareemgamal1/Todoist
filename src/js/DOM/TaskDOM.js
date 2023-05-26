@@ -1,20 +1,20 @@
-import Task from "./Task"
-import Today from "./Today"
-import LocalStorage from "./localStorage"
+import Task from "../Task"
+import Today from "../Today"
+import LocalStorage from "../localStorage"
 
 export default class TaskDOM {
    constructor() {
       this.localStorage = new LocalStorage()
    }
 
-   addTask(task) {
+   addTask(task, location) {
       let taskID = task.ID
       let taskName = task.name
       let taskDescription = task.description
       let taskDate = task.date
-      let taskLocation = task.location
-
+      let taskLocation = location
       let [tDate, old] = this.formatTaskDate(taskDate)
+
       if (taskDate) {
          taskDate = tDate
       }
@@ -47,7 +47,7 @@ export default class TaskDOM {
    }
 
    finishTask(taskID, project) {
-      console.log('s')
+      console.log('x')
       this.deleteTask(taskID)
       this.updateTotalTaskNumbers()
       if (project)
@@ -67,10 +67,27 @@ export default class TaskDOM {
    updateTotalTaskNumbers() {
       let noOfCompleted = document.querySelector('.no-of-completed')
       noOfCompleted.textContent = parseInt(noOfCompleted.textContent) + 1
-
    }
+
    addEventListeners(task) {
-      const htmlItem = document.querySelector(`.${task.location}-task-${task.ID}`)
+      task.locations.forEach(location => {
+         if (!location.includes('day')) {
+            const htmlItem = document.querySelector(`.${location}-task-${task.ID}`)
+            const editableName = htmlItem.querySelector(".task-name");
+            const editableDesc = htmlItem.querySelector(".task-description");
+
+            editableName.addEventListener('click', this.makeTextsEditable.bind(this, editableName));
+
+            editableDesc.addEventListener('click', this.makeTextsEditable.bind(this, editableDesc));
+
+            const dateInput = htmlItem.querySelector('.task .task-date-container .task-date')
+            dateInput.addEventListener('change', this.makeDateEditable.bind(this, dateInput))
+         }
+      })
+   }
+
+   addEventListenersAt(task, location) {
+      const htmlItem = document.querySelector(`.${location}-task-${task.ID}`)
       const editableName = htmlItem.querySelector(".task-name");
       const editableDesc = htmlItem.querySelector(".task-description");
 
@@ -96,7 +113,7 @@ export default class TaskDOM {
       const textValue = paragraphElement.textContent;
 
       //Projects
-      let projectID
+      let projectID = -1
 
       let projects = this.localStorage.getProjects()
       for (const project of projects) {
@@ -127,18 +144,8 @@ export default class TaskDOM {
 
          let projects = this.localStorage.getProjects()
          const projectIndex = projects.findIndex((p) => p.ID == projectID)
-
-         const tasksDB = projects[projectIndex]['tasks']
-
-         let projectTasks = tasksDB.map((task) => {
-            task.taskDOM = new TaskDOM()
-            return Object.assign(new Task(), task)
-         }
-         )
-
-         let todayTasks = this.localStorage.getToday()
+         let todayTasks = this.localStorage.getTodayTasks()
          let taskIndex = -1
-
 
          const nodeList = document.querySelectorAll(`[class*="${taskID}"]`);
          let tasksDOM = Array.from(nodeList)
@@ -146,27 +153,47 @@ export default class TaskDOM {
             tasksDOM = tasksDOM.map(taskDOM => taskDOM.querySelector('.task-name'))
             tasksDOM.forEach(task => task.textContent = updatedTextValue)
 
-            taskIndex = projectTasks.findIndex((t) => t.ID == taskID)
-            projectTasks[taskIndex].name = updatedTextValue
+            if (projectIndex !== -1) {
+               const tasksDB = projects[projectIndex]['tasks']
+               let projectTasks = tasksDB.map((task) => {
+                  task.taskDOM = new TaskDOM()
+                  return Object.assign(new Task(), task)
+               }
+               )
+               taskIndex = projectTasks.findIndex((t) => t.ID == taskID)
+               projectTasks[taskIndex].name = updatedTextValue
+               projects[projectIndex].tasks = projectTasks
+            }
 
             taskIndex = todayTasks.findIndex((t) => t.ID == taskID)
-            todayTasks[taskIndex].name = updatedTextValue
+            if (taskIndex !== -1) {
+               todayTasks[taskIndex].name = updatedTextValue
+            }
          }
          else {
             tasksDOM = tasksDOM.map(taskDOM => taskDOM.querySelector('.task-description'))
             tasksDOM.forEach(task => task.textContent = updatedTextValue)
 
-            taskIndex = projectTasks.findIndex((t) => t.ID == taskID)
-            projectTasks[taskIndex].description = updatedTextValue
+            if (projectIndex !== -1) {
+               const tasksDB = projects[projectIndex]['tasks']
+               let projectTasks = tasksDB.map((task) => {
+                  task.taskDOM = new TaskDOM()
+                  return Object.assign(new Task(), task)
+               }
+               )
+               taskIndex = projectTasks.findIndex((t) => t.ID == taskID)
+               projectTasks[taskIndex].description = updatedTextValue
+               projects[projectIndex].tasks = projectTasks
+            }
 
             taskIndex = todayTasks.findIndex((t) => t.ID == taskID)
-            todayTasks[taskIndex].description = updatedTextValue
+            if (taskIndex !== -1) {
+               todayTasks[taskIndex].description = updatedTextValue
+            }
          }
-         projects[projectIndex].tasks = projectTasks
-
 
          this.localStorage.setProjects(projects)
-         this.localStorage.setToday(todayTasks)
+         this.localStorage.setTodayTasks(todayTasks)
       }
 
       paragraphElement.style.display = "none";
@@ -176,13 +203,23 @@ export default class TaskDOM {
    }
 
    makeDateEditable(input) {
+      const date = input.value
+
       const projectHTML = input.parentNode.parentNode.parentNode
       const projectClasses = projectHTML.classList[1]
+
       const pattern = /task-(.*)/;
       const match = projectClasses.match(pattern);
       const taskID = match[1]
-
       //Projects
+      this.editDateInProjects(taskID, date)
+      //Today
+      this.editDateInToday(taskID, date)
+      //DOM
+      this.editDateInDOM(taskID, date)
+   }
+
+   editDateInProjects(taskID, date) {
       let projectID = -1
 
       let projects = this.localStorage.getProjects()
@@ -194,41 +231,46 @@ export default class TaskDOM {
             }
          }
       }
-
       const projectIndex = projects.findIndex((p) => p.ID == projectID)
+      if (projectIndex !== -1) {
+         const tasksDB = projects[projectIndex]['tasks']
+         let projectTasks = tasksDB.map((task) => {
+            task.taskDOM = new TaskDOM()
+            return Object.assign(new Task(), task)
+         }
+         )
 
-      const tasksDB = projects[projectIndex]['tasks']
-      let projectTasks = tasksDB.map((task) => {
-         task.taskDOM = new TaskDOM()
-         return Object.assign(new Task(), task)
+         let projectTaskIndex = projectTasks.findIndex((t) => t.ID == taskID)
+         projectTasks[projectTaskIndex].date = date
+         projects[projectIndex].tasks = projectTasks
+
+         const taskDate = new Date(date)
+         const today = new Date()
+         const isToday = taskDate.getDate() === today.getDate() &&
+            taskDate.getMonth() === today.getMonth() &&
+            taskDate.getFullYear() === today.getFullYear()
+         if (isToday) {
+            let today = new Today()
+            today.addTaskFromOutside(projectTasks[projectTaskIndex])
+         }
+         this.localStorage.setProjects(projects)
       }
-      )
+   }
 
-      let projectTaskIndex = projectTasks.findIndex((t) => t.ID == taskID)
-      projectTasks[projectTaskIndex].date = input.value
-      projects[projectIndex].tasks = projectTasks
-      //Today
-      const todayTasks = this.localStorage.getToday()
+   editDateInToday(taskID, date) {
+      const todayTasks = this.localStorage.getTodayTasks()
       let todayTaskIndex = todayTasks.findIndex((t) => t.ID == taskID)
 
       if (todayTaskIndex !== -1) {
-         todayTasks[todayTaskIndex].date = input.value
-         this.localStorage.setToday(todayTasks)
+         todayTasks[todayTaskIndex].date = date
+         this.localStorage.setTodayTasks(todayTasks)
       }
-      const taskDate = new Date(input.value)
-      const today = new Date()
-      const isToday = taskDate.getDate() === today.getDate() &&
-         taskDate.getMonth() === today.getMonth() &&
-         taskDate.getFullYear() === today.getFullYear()
-      if (isToday) {
-         let today = new Today()
-         today.addTaskFromOutside(projectTasks[projectTaskIndex])
-      }
+   }
 
-      //DOM
+   editDateInDOM(taskID, date) {
       const nodeList = document.querySelectorAll(`[class*="${taskID}"]`);
       const dateTexts = Array.from(nodeList).map(dateText => dateText.querySelector('.task-date').nextElementSibling);
-      let [formattedDate, old] = this.formatTaskDate(input.value)
+      let [formattedDate, old] = this.formatTaskDate(date)
       dateTexts.forEach(dateText => {
          dateText.innerText = formattedDate
          if (old) {
@@ -242,12 +284,7 @@ export default class TaskDOM {
 
       const todaytasks = new Today()
       todaytasks.updateTasks()
-
-      this.localStorage.setProjects(projects)
-
    }
-
-
 
    formatTaskDate(taskDate) {
       taskDate = new Date(taskDate)
@@ -258,7 +295,7 @@ export default class TaskDOM {
       let taskDateLocale = taskDate.toLocaleDateString("en-US", options)
 
 
-      if (taskDate < currentDate)
+      if (taskDate <= currentDate)
          old = true
       else
          old = false
