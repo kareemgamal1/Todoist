@@ -44,12 +44,26 @@ export default class ProjectDOM {
 
         let projectsHtml = document.querySelector(".projects");
         projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
+        let projectHTML = document.querySelector(`.project-${project.ID}`);
+        let tasksList = projectHTML.querySelector('.tasks-list')
+        let tasksHTML = ``
+
+        project.tasks.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date)
+        })
 
         project.tasks.forEach(task => {
-            task.location = `project-${project.ID}`
+            const location = `project-${project.ID}`
+            let newTask = new TaskDOM();
+            tasksHTML +=
+                newTask.addTask(task, location)
         })
-        project.updateTasks()
-        // project.addEventListeners()
+        tasksList.innerHTML = tasksHTML
+        // project.tasks.forEach(task => {
+        //     task.location = `project-${project.ID}`
+        // })
+        // project.updateTasks()
+        project.addEventListeners()
     }
 
     deleteProject(project) {
@@ -114,15 +128,16 @@ export default class ProjectDOM {
         })
 
         project.tasks.forEach(task => {
+            task.projectID = project.ID
             const location = `project-${project.ID}`
             let newTask = new TaskDOM();
             tasksHTML +=
                 newTask.addTask(task, location)
         })
         tasksList.innerHTML = tasksHTML
-        // project.tasks.forEach(task => {
-        //     task.addEventListenersAt(`project-${project.ID}`)
-        // })
+        project.tasks.forEach(task => {
+            task.addEventListenersAt(`project-${project.ID}`)
+        })
     }
 
     addTask(task) {

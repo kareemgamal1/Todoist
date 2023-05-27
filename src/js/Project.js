@@ -97,15 +97,16 @@ export default class Project {
     // Create a new task object and add it to the project's tasks array
     const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate);
 
-    this.addTaskToLocalStorage(taskToAdd)
 
     taskToAdd.projectID = this.ID
     taskToAdd.initialize()
     taskToAdd.addTask()
     taskToAdd.addEventListeners()
-
+    this.tasks.push(taskToAdd)
     // Add the new task to the project's DOM and update the tasks
+    //TODO New task doesn't have the location of the project
     this.updateTasks();
+    this.addTaskToLocalStorage(taskToAdd)
   }
 
   addTaskToLocalStorage(task) {

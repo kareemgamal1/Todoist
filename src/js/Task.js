@@ -82,17 +82,21 @@ export default class Task {
   finishTask() {
     //the first part is concerned with the storage of the task itself in the project, at last, you deal with the task's removal itself, handling the DOM aspect such as increasing total number of tasks completed at top.
     let projectID = this.getProjectID(this)
-    let projects = this.localStorage.getProjects()
-    const projectIndex = projects.findIndex((p) => p.ID == projectID)
-    let project = projects[projectIndex]
-
+    let project = this.getProject(projectID)
     this.localStorage.finishTask(this)
-
+    project = this.getProject(projectID)
     this.taskDOM.finishTask(this.ID, project)
   }
 
   getProjectID() {
     return this.localStorage.getProjectID(this)
+  }
+
+  getProject(projectID) {
+    let projects = this.localStorage.getProjects()
+    let projectIndex = projects.findIndex((p) => p.ID == projectID)
+    let project = projects[projectIndex]
+    return project
   }
 
   getDayID() {
@@ -126,8 +130,21 @@ export default class Task {
     if (this.isToday)
       this.locations.push("today")
 
-    if (this.dayID !== -1)
-      this.locations.push("day-" + this.dayID)
-  }
+    const today = new Date();
 
+    const taskYear = this.date.getFullYear();
+    const taskMonth = this.date.getMonth();
+    const taskDay = this.date.getDate();
+
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentDay = today.getDate();
+
+    const dateIsBigger = taskYear > currentYear ||
+      (taskYear === currentYear && taskMonth > currentMonth) ||
+      (taskYear === currentYear && taskMonth === currentMonth && taskDay >= currentDay)
+    if (this.dayID !== -1 && dateIsBigger) {
+      this.locations.push("day-" + this.dayID)
+    }
+  }
 }

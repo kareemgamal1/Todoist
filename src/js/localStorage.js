@@ -183,7 +183,7 @@ export default class LocalStorage {
         return dayTasks
     }
 
-    setTasksForDay(date, task) {
+    setTasksForDay(date, newTasks) {
         let tasks = this.getTasksForDay(date)
         let days = this.getDays()
         let dayDate = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
@@ -197,8 +197,7 @@ export default class LocalStorage {
                 break;
             }
         }
-        tasks.push(task)
-        days[dayIndex].tasks = tasks
+        days[dayIndex].tasks = newTasks
         this.setDays(days)
     }
 
@@ -231,7 +230,7 @@ export default class LocalStorage {
         dayTasks = dayTasks.filter((t) =>
             t.ID != task.ID
         )
-        this.setTasksForDay(task.date)
+        this.setTasksForDay(task.date, dayTasks)
         //Tasks
         let tasks = this.getTasks()
         tasks = tasks.filter((t) =>
