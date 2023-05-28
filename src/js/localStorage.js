@@ -99,6 +99,18 @@ export default class LocalStorage {
         return projectID
     }
 
+    getProjectTasks(projectID) {
+        let projects = this.getProjects()
+        let tasks = []
+        projects.forEach(project => {
+            if (project.ID === projectID)
+                project.tasks.forEach(task => {
+                    tasks.push(task)
+                })
+        })
+        return tasks
+    }
+
 
     setTodayTasks(todayTasks) {
         localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
@@ -204,42 +216,52 @@ export default class LocalStorage {
     // Increase the count of finished tasks in the local storage
     finishTask(task) {
         //Projects
-        let projectID = this.getProjectID(task)
-        let projects = this.getProjects()
-        const projectIndex = projects.findIndex((p) => p.ID == projectID)
-        let project = projects[projectIndex]
-        if (projectID !== -1) {
-            project['tasks'] = project['tasks'].filter((projectTask) =>
-                projectTask.ID != task.ID
-            )
-            projects[projectIndex] = project
-            project['noOfTasks'] = project['tasks'].length;
+        {
+            let projectID = this.getProjectID(task)
+            let projects = this.getProjects()
+            const projectIndex = projects.findIndex((p) => p.ID == projectID)
+            let project = projects[projectIndex]
+            if (projectID !== -1) {
+                project['tasks'] = project['tasks'].filter((projectTask) =>
+                    projectTask.ID != task.ID
+                )
+                projects[projectIndex] = project
+                project['noOfTasks'] = project['tasks'].length;
+            }
+            this.setProjects(projects);
         }
-        this.setProjects(projects);
         //Today
-        let todayTasks = this.getTodayTasks()
-        const taskIndex = todayTasks.findIndex((todayTask) => todayTask.ID == task.ID)
-        todayTasks = todayTasks.filter((todayTask) =>
-            todayTask.ID != task.ID
-        )
-        if (taskIndex !== -1) {
-            this.setTodayTasks(todayTasks)
+        {
+            let todayTasks = this.getTodayTasks()
+            const taskIndex = todayTasks.findIndex((todayTask) => todayTask.ID == task.ID)
+            todayTasks = todayTasks.filter((todayTask) =>
+                todayTask.ID != task.ID
+            )
+            if (taskIndex !== -1) {
+                this.setTodayTasks(todayTasks)
+            }
         }
         //Day
-        let dayTasks = this.getTasksForDay(task.date)
-        dayTasks = dayTasks.filter((t) =>
-            t.ID != task.ID
-        )
-        this.setTasksForDay(task.date, dayTasks)
+        {
+            let dayTasks = this.getTasksForDay(task.date)
+            dayTasks = dayTasks.filter((t) =>
+                t.ID != task.ID
+            )
+            this.setTasksForDay(task.date, dayTasks)
+        }
         //Tasks
-        let tasks = this.getTasks()
-        tasks = tasks.filter((t) =>
-            t.ID != task.ID
-        )
-        this.setTasks(tasks)
+        {
+            let tasks = this.getTasks()
+            tasks = tasks.filter((t) =>
+                t.ID != task.ID
+            )
+            this.setTasks(tasks)
+        }
         //DOM
-        let finishedTasks = localStorage.getItem('finishedTasks');
-        finishedTasks++;
-        localStorage.setItem('finishedTasks', finishedTasks);
+        {
+            let finishedTasks = localStorage.getItem('finishedTasks');
+            finishedTasks++;
+            localStorage.setItem('finishedTasks', finishedTasks);
+        }
     }
 }

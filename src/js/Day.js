@@ -54,12 +54,9 @@ export default class Day {
         taskToAdd.initialize()
         taskToAdd.addTask()
         taskToAdd.addEventListenersAt("day-" + taskDateString)
-        let dayTasks = this.localStorage.getTasksForDay(taskDate)
-        dayTasks.push(taskToAdd)
-        this.localStorage.setTasksForDay(taskDate, dayTasks)
-
+        this.tasks = this.localStorage.getTasksForDay(taskDate)
+        console.log('xa')
         if (taskDateString === this.dateString) {
-            this.tasks.push(taskToAdd)
             this.updateTasks()
         }
     }

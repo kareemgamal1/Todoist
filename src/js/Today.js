@@ -34,12 +34,14 @@ export default class Today {
 
         const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate, 1)
 
+        taskToAdd.initialize()
+        taskToAdd.addTask()
+        console.log('s')
         this.tasks = this.localStorage.getTodayTasks()
-        this.tasks.push(taskToAdd)
         this.localStorage.setTodayTasks(this.tasks)
         this.noOfTasks = this.tasks.length;
 
-        this.todayDOM.addTask(this, taskToAdd)
+        // this.todayDOM.addTask(this, taskToAdd)
         this.updateTasks()
     }
 

@@ -40,10 +40,12 @@ export default class Task {
 
         let noOfTasksSpan = document.querySelector(`.${location} .noOfTasks`)
         noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
+        this.addEventListenersAt(location)
       }
       else if (location.includes('today')) {
         let today = new Today()
         today.addTaskFromOutside(this)
+        this.addEventListenersAt(location)
       }
       else if (location.includes('day')) {
         const htmlItem = document.querySelector(`.${location}`)
@@ -51,6 +53,7 @@ export default class Task {
         let newTask = taskDOM.addTask(this, location)
         let tasks = htmlItem.querySelector('.tasks-list')
         tasks.innerHTML += newTask
+        this.addEventListenersAt(location)
       }
     })
     // this.addEventListeners()
