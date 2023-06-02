@@ -45,17 +45,20 @@ export default class Day {
         }
         else {
             taskDate = new Date()
-            taskDate.setHours(0, 0, 0, 0);
+            taskDate.setHours(0, 0, 0, 0)
         }
 
-        const taskDateString = `${taskDate.getFullYear()}${taskDate.getMonth() + 1}${taskDate.getDate()}`
         const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate)
+
+
+        const taskDateString = `${taskDate.getFullYear()}${taskDate.getMonth() + 1}${taskDate.getDate()}`
         taskToAdd.dayID = taskDateString
+
         taskToAdd.initialize()
         taskToAdd.addTask()
-        taskToAdd.addEventListenersAt("day-" + taskDateString)
+        taskToAdd.addEventListenersAt("day-" + taskDateString) //it should add it when we add task
+
         this.tasks = this.localStorage.getTasksForDay(taskDate)
-        console.log('xa')
         if (taskDateString === this.dateString) {
             this.updateTasks()
         }

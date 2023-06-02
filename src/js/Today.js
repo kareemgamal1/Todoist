@@ -31,17 +31,15 @@ export default class Today {
             taskDate.setHours(0, 0, 0, 0);
         }
 
-
         const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate, 1)
 
         taskToAdd.initialize()
         taskToAdd.addTask()
-        console.log('s')
+
         this.tasks = this.localStorage.getTodayTasks()
         this.localStorage.setTodayTasks(this.tasks)
         this.noOfTasks = this.tasks.length;
 
-        // this.todayDOM.addTask(this, taskToAdd)
         this.updateTasks()
     }
 

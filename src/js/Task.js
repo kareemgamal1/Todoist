@@ -10,7 +10,7 @@ export default class Task {
     this.date = new Date(date)
     this.localStorage = new LocalStorage();
 
-    this.taskDOM = new TaskDOM(this)//necessary for the conversion from JSON to Object
+    this.taskDOM = new TaskDOM()//necessary for the conversion from JSON to Object
 
     //TODO a task should have the same consistent structure across all places where it exists, thus i should have a location array that puts the task in each DOM location and updates it in each localStorage container
     this.locations = []
@@ -60,7 +60,6 @@ export default class Task {
   }
 
   addEventListeners() {
-    console.log('x')
     this.locations.forEach(location => {
       if (!location.includes('day')) {
         const htmlItem = document.querySelector(`.${location}-task-${this.ID}`)
@@ -85,9 +84,11 @@ export default class Task {
   finishTask() {
     //the first part is concerned with the storage of the task itself in the project, at last, you deal with the task's removal itself, handling the DOM aspect such as increasing total number of tasks completed at top.
     let projectID = this.getProjectID(this)
+
     let project = this.getProject(projectID)
     this.localStorage.finishTask(this)
     project = this.getProject(projectID)
+
     this.taskDOM.finishTask(this.ID, project)
   }
 

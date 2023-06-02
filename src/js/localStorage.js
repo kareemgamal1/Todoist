@@ -40,7 +40,7 @@ export default class LocalStorage {
         )
         localStorage.setItem('todayTasks', JSON.stringify(todayTasks));
         //all tasks
-        localStorage.setItem('tasks', JSON.stringify(this.getTasks()))
+        localStorage.setItem('tasks', JSON.stringify(tasks))
 
         localStorage.setItem('finishedTasks', 0);
     }
@@ -140,14 +140,21 @@ export default class LocalStorage {
 
 
     getTasks() {
-        const projectTasks = this.getProjectsTasks(); // Get an array of project tasks
-        const todayTasks = this.getTodayTasks(); // Get an array of tasks for today
-        const totalTasks = projectTasks.concat(todayTasks); // Concatenate the two arrays into a single array of all tasks
-        const uniqueTasks = totalTasks.filter((elem, index, self) => {
-            // Apply the filter method on the concatenated array to remove duplicates
-            return index === self.findIndex(t => t.ID === elem.ID); // Keep only the first occurrence of each task with a unique ID
-        });
-        return uniqueTasks
+        // const projectTasks = this.getProjectsTasks(); // Get an array of project tasks
+        // const todayTasks = this.getTodayTasks(); // Get an array of tasks for today
+        // const totalTasks = projectTasks.concat(todayTasks); // Concatenate the two arrays into a single array of all tasks
+        // const uniqueTasks = totalTasks.filter((elem, index, self) => {
+        //     // Apply the filter method on the concatenated array to remove duplicates
+        //     return index === self.findIndex(t => t.ID === elem.ID); // Keep only the first occurrence of each task with a unique ID
+        // });
+        let tasks = JSON.parse(localStorage.getItem("tasks") || "[]")
+        tasks = tasks.map((task) => {
+            task.localStorage = new LocalStorage();
+            task.taskDOM = new TaskDOM();
+            task.date = new Date(task.date)
+            return Object.assign(new Task(), task);
+        })
+        return tasks
     }
 
     setTasks(tasks) {
@@ -196,7 +203,6 @@ export default class LocalStorage {
     }
 
     setTasksForDay(date, newTasks) {
-        let tasks = this.getTasksForDay(date)
         let days = this.getDays()
         let dayDate = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
         let dayIndex = -1;

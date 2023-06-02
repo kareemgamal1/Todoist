@@ -5,7 +5,6 @@ import LocalStorage from "./localStorage";
 
 export default class Project {
   constructor(name, ...tasks) {
-    // Initialize project properties
     this.ID = this.generateRandomId();
     this.name = name;
 
@@ -18,7 +17,6 @@ export default class Project {
       this.noOfTasks = 0;
     }
 
-    // Create instances of LocalStorage and ProjectDOM classes
     this.projectDOM = new ProjectDOM();
     this.localStorage = new LocalStorage();
   }
@@ -62,17 +60,14 @@ export default class Project {
     let deleteProject = htmlItem.querySelector('.deleteProject');
     let addTaskBtn = htmlItem.querySelector('.submit-task');
 
-    // Add event listener for deleting the project
     deleteProject.addEventListener('click', () => {
       this.deleteProject();
     });
 
-    // Add event listener for adding a task to the project
     addTaskBtn.addEventListener('click', () => {
       this.addTask();
     });
 
-    // Add event listeners to the project's tasks
     this.projectDOM.addEventListeners(this);
   }
 
@@ -97,13 +92,12 @@ export default class Project {
     // Create a new task object and add it to the project's tasks array
     const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate);
 
-    this.tasks = this.localStorage.getProjectTasks(this.ID)
     taskToAdd.projectID = this.ID
     taskToAdd.initialize()
     taskToAdd.addTask()
     taskToAdd.addEventListeners()
+
     this.tasks = this.localStorage.getProjectTasks(this.ID)
-    console.log('ssss')
     // Add the new task to the project's DOM and update the tasks
     //TODO New task doesn't have the location of the project
     this.updateTasks();
