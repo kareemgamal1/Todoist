@@ -7,13 +7,16 @@ export default class InboxDOM {
         this.cancelBtn = document.querySelector('.new-project .cancel-add');
 
         // Add event listeners to the form buttons
-        this.formBtn.addEventListener("click", () => {
+        this.formBtn.addEventListener("click", (event) => {
+            event.preventDefault()
             this.showForm();
         });
-        this.cancelBtn.addEventListener('click', () => {
+        this.cancelBtn.addEventListener('click', (event) => {
+            event.preventDefault()
             this.hideForm();
         });
-        this.finishBtn.addEventListener('click', () => {
+        this.finishBtn.addEventListener('click', (event) => {
+            event.preventDefault()
             this.hideForm();
         });
     }

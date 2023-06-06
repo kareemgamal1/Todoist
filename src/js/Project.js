@@ -91,17 +91,13 @@ export default class Project {
 
     // Create a new task object and add it to the project's tasks array
     const taskToAdd = new Task(taskName.value, taskDescription.value, taskDate);
-
     taskToAdd.projectID = this.ID
     taskToAdd.initialize()
     taskToAdd.addTask()
     taskToAdd.addEventListeners()
 
-    this.tasks = this.localStorage.getProjectTasks(this.ID)
-    // Add the new task to the project's DOM and update the tasks
-    //TODO New task doesn't have the location of the project
-    this.updateTasks();
     this.addTaskToLocalStorage(taskToAdd)
+    this.updateTasks();
   }
 
   addTaskToLocalStorage(task) {
@@ -117,6 +113,7 @@ export default class Project {
     this['noOfTasks'] = this['tasks'].length;
     projects[projectIndex] = this;
     this.localStorage.setProjects(projects);
+    this.tasks = this.localStorage.getProjectTasks(this.ID)
   }
   // Update the project's tasks in the DOM and add event listeners to the tasks
   updateTasks() {

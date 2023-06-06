@@ -14,7 +14,7 @@ export default class LocalStorage {
         this.projects = [
             new Project(
                 "",
-                new Task("I don't know honestly", "Yeahhh", new Date("6/1/2023")),
+                new Task("I don't know honestly", "Yeahhh", new Date("5/1/2023")),
                 new Task("I miss her", "idk", new Date())
             ),
             new Project(
@@ -203,15 +203,22 @@ export default class LocalStorage {
     }
 
     setTasksForDay(date, newTasks) {
+        let today = new Date()
+        const isBeforeToday = date.getFullYear() < today.getFullYear() ||
+            (date.getFullYear() === today.getFullYear() && date.getMonth() < today.getMonth()) ||
+            (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() < today.getDate());
+
+        if (isBeforeToday) {
+            return
+        }
+
         let days = this.getDays()
         let dayDate = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
         let dayIndex = -1;
-        let dayToEdit;
         for (let index = 0; index < days.length; index++) {
             const element = days[index];
             if (element.dateString === dayDate) {
                 dayIndex = index
-                dayToEdit = element
                 break;
             }
         }

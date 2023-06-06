@@ -133,19 +133,21 @@ export default class DayDOM {
 
   updateTasks(day) {
     let dayHTML = document.querySelector(`.day-${day.dateString}`);
-    let tasksList = dayHTML.querySelector('.tasks-list')
-    let tasksHTML = ``
+    if (dayHTML) {
+      let tasksList = dayHTML.querySelector('.tasks-list')
+      let tasksHTML = ``
 
-    day.tasks.sort((a, b) => {
-      return new Date(a.date) - new Date(b.date)
-    })
+      day.tasks.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
+      })
 
-    day.tasks.forEach(task => {
-      const location = `day-${day.dateString}`
-      let newTask = new TaskDOM();
-      tasksHTML +=
-        newTask.addTask(task, location)
-    })
-    tasksList.innerHTML = tasksHTML
+      day.tasks.forEach(task => {
+        const location = `day-${day.dateString}`
+        let newTask = new TaskDOM();
+        tasksHTML +=
+          newTask.addTask(task, location)
+      })
+      tasksList.innerHTML = tasksHTML
+    }
   }
 }

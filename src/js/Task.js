@@ -1,4 +1,5 @@
 import TaskDOM from "./DOM/TaskDOM";
+import Day from "./Day";
 import Today from "./Today";
 import LocalStorage from "./localStorage";
 
@@ -48,15 +49,12 @@ export default class Task {
         this.addEventListenersAt(location)
       }
       else if (location.includes('day')) {
-        const htmlItem = document.querySelector(`.${location}`)
-        let taskDOM = new TaskDOM();
-        let newTask = taskDOM.addTask(this, location)
-        let tasks = htmlItem.querySelector('.tasks-list')
-        tasks.innerHTML += newTask
+        //Two possibilities, the day is in the DOM alraedy or yet to be there
+        let day = new Day(this.date)
+        day.addTaskFromOutside(this)
         this.addEventListenersAt(location)
       }
     })
-    // this.addEventListeners()
   }
 
   addEventListeners() {
@@ -125,7 +123,7 @@ export default class Task {
   }
 
   initialize() {
-    this.projectID = this.getProjectID()
+    // this.projectID = this.getProjectID()
     this.isToday = this.getIsToday()
 
     if (this.projectID !== -1)

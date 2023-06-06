@@ -64,6 +64,14 @@ export default class Day {
         }
     }
 
+    addTaskFromOutside(task) {
+        this.tasks.push(task)
+        this.noOfTasks = this.tasks.length;
+        this.localStorage.setTasksForDay(this.date, this.tasks)
+        this.dayDOM.addTask(task)
+        this.updateTasks()
+    }
+
     updateTasks() {
         this.dayDOM.updateTasks(this);
         this.tasks.forEach(task => {

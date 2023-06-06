@@ -42,9 +42,9 @@ export default class TodayDOM {
     }
 
     addTask(task) {
-        const htmlItem = document.querySelector(".today-page")
+        const htmlItem = document.querySelector(`.day-${task.dayID}`)
         let taskDOM = new TaskDOM();
-        let newTask = taskDOM.addTask(task, 'today')
+        let newTask = taskDOM.addTask(task, task.dayID)
         let tasks = htmlItem.querySelector('.tasks-list')
         tasks.innerHTML += newTask
     }
