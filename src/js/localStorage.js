@@ -15,6 +15,7 @@ export default class LocalStorage {
             new Project(
                 "",
                 new Task("I don't know honestly", "Yeahhh", new Date("5/1/2023")),
+                new Task("I don't know honestly", "Yeahhh", new Date("7/1/2023")),
                 new Task("I miss her", "idk", new Date())
             ),
             new Project(
@@ -161,7 +162,24 @@ export default class LocalStorage {
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
+    getTask(taskID) {
+        let tasks = this.getTasks()
+        const tasksIndex = tasks.findIndex((t) => t.ID === taskID)
+        return tasks[tasksIndex]
+    }
 
+    setTask(taskID, newTask) {
+        let tasks = this.getTasks()
+        const tasksIndex = tasks.findIndex((t) => t.ID === taskID)
+        tasks[tasksIndex] = newTask
+        this.setTasks(tasks)
+    }
+
+    addTask(task) {
+        let tasks = this.getTasks()
+        tasks.push(task)
+        this.setTasks(tasks)
+    }
 
     setDays(days) {
         localStorage.setItem('days', JSON.stringify(days));

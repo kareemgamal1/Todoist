@@ -23,13 +23,14 @@ export default class Project {
 
   generateRandomId() {
     let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // Define the characters to use for the ID
 
+    // Loop 10 times to generate a 10-character ID
     for (let i = 0; i < 10; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
+      result += characters.charAt(Math.floor(Math.random() * characters.length)); // Add a random character from the characters string to the result string
     }
 
-    return result;
+    return result; // Return the generated ID
   }
 
   // Add the project to the local storage and the DOM
@@ -101,19 +102,19 @@ export default class Project {
   }
 
   addTaskToLocalStorage(task) {
-    let projects = this.localStorage.getProjects();
-    const projectIndex = projects.findIndex((p) => p.ID == this.ID);
-    const tasksDB = projects[projectIndex]['tasks'];
-    let newTasks = tasksDB.map((task) => {
-      task.taskDOM = new TaskDOM();
-      return Object.assign(new Task(), task);
+    let projects = this.localStorage.getProjects(); // Get the list of projects from local storage
+    const projectIndex = projects.findIndex((p) => p.ID == this.ID); // Find the index of this project in the list
+    const tasksDB = projects[projectIndex]['tasks']; // Get the tasks for this project from local storage
+    let newTasks = tasksDB.map((task) => { // Create a new array of tasks with updated task DOM objects
+      task.taskDOM = new TaskDOM(); // Instantiate TaskDOM for each task
+      return Object.assign(new Task(), task); // Combine the Task object with the task from local storage
     });
-    this.tasks = newTasks;
-    this.tasks.push(task);
-    this['noOfTasks'] = this['tasks'].length;
-    projects[projectIndex] = this;
-    this.localStorage.setProjects(projects);
-    this.tasks = this.localStorage.getProjectTasks(this.ID)
+    this.tasks = newTasks; // Update the tasks for this project
+    this.tasks.push(task); // Add the new task to the tasks array
+    this['noOfTasks'] = this['tasks'].length; // Update the number of tasks for this project
+    projects[projectIndex] = this; // Update the project in the projects list with the new task
+    this.localStorage.setProjects(projects); // Update the projects in local storage
+    this.tasks = this.localStorage.getProjectTasks(this.ID); // Get the updated tasks for this project from local storage
   }
   // Update the project's tasks in the DOM and add event listeners to the tasks
   updateTasks() {

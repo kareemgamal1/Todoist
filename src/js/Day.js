@@ -12,6 +12,7 @@ export default class Day {
     }
 
     initialize() {
+        this.tasks = this.localStorage.getTasksForDay(this.date)
         this.dayDOM.initialize()
         this.tasks.forEach(task => {
             task.addEventListenersAt('day-' + this.dateString)
@@ -23,12 +24,10 @@ export default class Day {
         const htmlItem = document.querySelector(".day-" + this.dateString)
         let addTaskBtn = htmlItem.querySelector('.submit-task');
 
-        // Add event listener for adding a task to the project
         addTaskBtn.addEventListener('click', () => {
             this.addTask();
         });
 
-        // Add event listeners to the project's tasks
         this.dayDOM.addEventListeners(this);
     }
 

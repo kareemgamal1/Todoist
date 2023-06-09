@@ -1,3 +1,4 @@
+import Day from "../Day"
 import Task from "../Task"
 import Today from "../Today"
 import LocalStorage from "../localStorage"
@@ -13,7 +14,7 @@ export default class TaskDOM {
       let taskDescription = task.description
       let taskDate = task.date
       let taskLocation = location
-      let [tDate, old] = this.formatTaskDate(taskDate)
+      let [tDate, isOld] = this.formatTaskDate(taskDate)
 
       if (taskDate) {
          taskDate = tDate
@@ -22,7 +23,7 @@ export default class TaskDOM {
          taskDate = ""
       }
       let oldClass = ""
-      if (old)
+      if (isOld)
          oldClass = "old"
 
       return `
@@ -47,7 +48,6 @@ export default class TaskDOM {
    }
 
    finishTask(taskID, project) {
-      console.log('x')
       this.deleteTask(taskID)
       this.updateTotalTaskNumbers()
       if (project)
@@ -211,10 +211,14 @@ export default class TaskDOM {
       const pattern = /task-(.*)/;
       const match = projectClasses.match(pattern);
       const taskID = match[1]
+      //Tasks
+      this.editDateInTasks(taskID, date)
       //Projects
       this.editDateInProjects(taskID, date)
       //Today
       this.editDateInToday(taskID, date)
+      //Day
+      this.editDateInDay(taskID, date)
       //DOM
       this.editDateInDOM(taskID, date)
    }
@@ -244,20 +248,22 @@ export default class TaskDOM {
          projectTasks[projectTaskIndex].date = date
          projects[projectIndex].tasks = projectTasks
 
-         const taskDate = new Date(date)
-         const today = new Date()
-         const isToday = taskDate.getDate() === today.getDate() &&
-            taskDate.getMonth() === today.getMonth() &&
-            taskDate.getFullYear() === today.getFullYear()
-         if (isToday) {
-            let today = new Today()
-            today.addTaskFromOutside(projectTasks[projectTaskIndex])
-         }
          this.localStorage.setProjects(projects)
       }
    }
 
    editDateInToday(taskID, date) {
+      let task = this.localStorage.getTask(taskID)
+      const taskDate = new Date(date)
+      const today = new Date()
+      const isToday = taskDate.getDate() === today.getDate() &&
+         taskDate.getMonth() === today.getMonth() &&
+         taskDate.getFullYear() === today.getFullYear()
+      if (isToday) {
+         let today = new Today()
+         today.addTaskFromOutside(task)
+      }
+
       const todayTasks = this.localStorage.getTodayTasks()
       let todayTaskIndex = todayTasks.findIndex((t) => t.ID == taskID)
 
@@ -267,8 +273,67 @@ export default class TaskDOM {
       }
    }
 
+   editDateInDay(taskID, date) {
+      //Get all days, remove task from the current day, put it in the day with it's date as the date paramater
+      let task = this.localStorage.getTask(taskID)
+
+      let oldTasks = this.localStorage.getTasksForDay(task.date)
+      let newTasks = this.localStorage.getTasksForDay(new Date(date))
+
+      oldTasks = oldTasks.filter(t => t.ID !== taskID)
+      this.localStorage.setTasksForDay(new Date(task.date), oldTasks)
+
+      task.date = date
+      newTasks.push(task)
+      this.localStorage.setTasksForDay(new Date(date), newTasks)
+   }
+
+   editDateInTasks(taskID, date) {
+      date = new Date(date)
+      let tasks = this.localStorage.getTasks()
+      tasks.forEach(t => {
+         if (t.ID === taskID) {
+            t.date = date
+            t.dayID = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
+         }
+      })
+      this.localStorage.setTasks(tasks)
+   }
+
    editDateInDOM(taskID, date) {
-      const nodeList = document.querySelectorAll(`[class*="${taskID}"]`);
+      date = new Date(date)
+      let task = this.localStorage.getTask(taskID)
+
+      {
+         let oldLoc = ""
+         const newLoc = `day-${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
+         console.log(task.locations)
+         task.locations.forEach((location, i, arr) => {
+            if (location.includes('day-')) {
+               oldLoc = location
+               console.log(arr[i])
+               arr[i] = `day-${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`
+               console.log(task.locations)
+            }
+         })
+         this.localStorage.setTask(taskID, task); //updates new location in task
+         if (oldLoc) {
+            const oldDayHTML = document.querySelector(`.${oldLoc} `)
+            if (oldDayHTML) {
+               const taskInOld = oldDayHTML.querySelector(`[class*= "${taskID}"]`)
+               taskInOld.remove()
+            }
+            const newDayHTML = document.querySelector(`.${newLoc}`)
+            if (newDayHTML) {
+               let day = new Day(date)
+               day.initialize()
+            }
+            //Remove task from oldDayHTML, add it to newDayHTML, add event listener to it and sort it (using update tasks)
+            //What if either the old or new day are yet to be rendered? handled by the if conditions
+         }
+      }
+
+      const nodeList = document.querySelectorAll(`[class*= "${taskID}"]`);
       const dateTexts = Array.from(nodeList).map(dateText => dateText.querySelector('.task-date').nextElementSibling);
       let [formattedDate, old] = this.formatTaskDate(date)
       dateTexts.forEach(dateText => {
@@ -312,15 +377,5 @@ export default class TaskDOM {
 
 
       return [date, old]
-   }
-
-   deleteChecked() {
-      let listings = document.querySelectorAll('.c4mnd7m ')
-      listings.forEach((list) => {
-         let btn = list.querySelector('.l1j9v1wn.bq05a0m.vq7srz5')
-         if (btn.ariaLabel.includes("Remove"))
-            list.parentElement.remove()
-      }
-      )
    }
 }

@@ -1,3 +1,4 @@
+import LocalStorage from "../localStorage";
 import TaskDOM from "./TaskDOM";
 
 export default class DayDOM {
@@ -5,9 +6,11 @@ export default class DayDOM {
     this.tasks = tasks
     this.date = new Date(date)
     this.dateString = dateString
+    this.localStorage = new LocalStorage()
   }
 
   initialize() {
+    this.tasks = this.localStorage.getTasksForDay(this.date)
     this.tasks.forEach(task => {
       const taskLocation = `day-${this.dateString}`
       const htmlItem = document.querySelector(`.${taskLocation}`)

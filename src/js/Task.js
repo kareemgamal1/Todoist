@@ -11,9 +11,8 @@ export default class Task {
     this.date = new Date(date)
     this.localStorage = new LocalStorage();
 
-    this.taskDOM = new TaskDOM()//necessary for the conversion from JSON to Object
+    this.taskDOM = new TaskDOM() //necessary for the conversion from JSON to Object
 
-    //TODO a task should have the same consistent structure across all places where it exists, thus i should have a location array that puts the task in each DOM location and updates it in each localStorage container
     this.locations = []
     this.projectID = -1
     this.dayID = `${this.date.getFullYear()}${this.date.getMonth() + 1}${this.date.getDate()}`
@@ -21,40 +20,45 @@ export default class Task {
 
   generateRandomId() {
     let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; // Define the characters to use for the ID
 
+    // Loop 10 times to generate a 10-character ID
     for (let i = 0; i < 10; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
+      result += characters.charAt(Math.floor(Math.random() * characters.length)); // Add a random character from the characters string to the result string
     }
 
-    return result;
+    return result; // Return the generated ID
   }
 
   addTask() {
+    // Loop through each location in the locations array
     this.locations.forEach(location => {
-      if (location.includes('project')) {
-        const htmlItem = document.querySelector(`.${location}`)
-        let taskDOM = new TaskDOM();
-        let newTask = taskDOM.addTask(this, location)
-        let tasks = htmlItem.querySelector('.tasks-list')
-        tasks.innerHTML += newTask
 
-        let noOfTasksSpan = document.querySelector(`.${location} .noOfTasks`)
-        noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
-        this.addEventListenersAt(location)
+      if (location.includes('project')) { // If the location is a project page
+        const htmlItem = document.querySelector(`.${location}`) // Get the HTML element for the project page
+        let taskDOM = new TaskDOM(); // Instantiate TaskDOM
+        let newTask = taskDOM.addTask(this, location); // Add a new task to the project page
+        let tasks = htmlItem.querySelector('.tasks-list'); // Get the tasks list element
+        tasks.innerHTML += newTask; // Add the new task HTML to the tasks list
+
+        let noOfTasksSpan = document.querySelector(`.${location} .noOfTasks`); // Get the number of tasks element for the project page
+        noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1; // Increment the number of tasks for the project page
+        this.addEventListenersAt(location); // Add event listeners for the new task on the project page
       }
-      else if (location.includes('today')) {
-        let today = new Today()
-        today.addTaskFromOutside(this)
-        this.addEventListenersAt(location)
+      else if (location.includes('today')) { // If the location is the today page
+        let today = new Today(); // Instantiate Today
+        today.addTaskFromOutside(this); // Add the new task to the today page
+        this.addEventListenersAt(location); // Add event listeners for the new task on the today page
       }
-      else if (location.includes('day')) {
-        //Two possibilities, the day is in the DOM alraedy or yet to be there
-        let day = new Day(this.date)
-        day.addTaskFromOutside(this)
-        this.addEventListenersAt(location)
+      else if (location.includes('day')) { // If the location is a day page
+        //Two possibilities, the day is in the DOM already or yet to be there
+        let day = new Day(this.date); // Instantiate Day
+        day.addTaskFromOutside(this); // Add the new task to the day page
+        this.addEventListenersAt(location); // Add event listeners for the new task on the day page
       }
     })
+
+    this.localStorage.addTask(this); // Add the new task to local storage
   }
 
   addEventListeners() {
@@ -72,6 +76,7 @@ export default class Task {
 
   addEventListenersAt(location) {
     const htmlItem = document.querySelector(`.${location}-task-${this.ID}`)
+    if (!htmlItem) return
     let finishBtn = htmlItem.querySelector('.done')
     finishBtn.addEventListener('click', () => {
       this.finishTask()
@@ -123,7 +128,6 @@ export default class Task {
   }
 
   initialize() {
-    // this.projectID = this.getProjectID()
     this.isToday = this.getIsToday()
 
     if (this.projectID !== -1)
