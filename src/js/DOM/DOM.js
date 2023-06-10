@@ -1,10 +1,11 @@
+/* eslint-disable class-methods-use-this */
 export default class DOM {
   initialize() {
-    const sidenav = document.querySelector('.sidenav');
+    const sidenav = document.querySelector(".sidenav");
     const menuButton = document.querySelector(".expand");
 
-    menuButton.addEventListener('click', () => {
-      sidenav.classList.toggle('active');
+    menuButton.addEventListener("click", () => {
+      sidenav.classList.toggle("active");
     });
 
     // const pages = document.querySelectorAll(`.page`);

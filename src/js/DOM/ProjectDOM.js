@@ -1,16 +1,18 @@
-import TaskDOM from "./TaskDOM"
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-param-reassign */
+import TaskDOM from "./TaskDOM";
 import LocalStorage from "../localStorage";
 
 export default class ProjectDOM {
     constructor() {
-        this.localStorage = new LocalStorage()
+        this.localStorage = new LocalStorage();
     }
 
     addProject(project) {
-        let projectName = project['name']
-        projectName = projectName === '' ? 'Unnamed Project' : projectName
+        let projectName = project.name;
+        projectName = projectName === "" ? "Unnamed Project" : projectName;
 
-        let projectHtml = `
+        const projectHtml = `
     <div class="project-${project.ID} mb-4">
     <div class="project-heading d-flex gap-1 align-items-center"><strong class="project-name">(${projectName})</strong>
         <span class="noOfTasks">${project.noOfTasks}</span>
@@ -40,116 +42,91 @@ export default class ProjectDOM {
 
         </form>
   </div>
-  `
+  `;
 
-        let projectsHtml = document.querySelector(".projects");
-        projectsHtml.insertAdjacentHTML('beforeend', projectHtml);//a cookie for all the cross site script attackers
-        let projectHTML = document.querySelector(`.project-${project.ID}`);
-        let tasksList = projectHTML.querySelector('.tasks-list')
-        let tasksHTML = ``
+        const projectsHtml = document.querySelector(".projects");
+        projectsHtml.insertAdjacentHTML("beforeend", projectHtml);// a cookie for all the cross site script attackers
+        const projectHTML = document.querySelector(`.project-${project.ID}`);
+        const tasksList = projectHTML.querySelector(".tasks-list");
+        let tasksHTML = "";
 
-        project.tasks.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-        })
+        project.tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         project.tasks.forEach(task => {
-            const location = `project-${project.ID}`
-            let newTask = new TaskDOM();
+            const location = `project-${project.ID}`;
+            const newTask = new TaskDOM();
             tasksHTML +=
-                newTask.addTask(task, location)
-        })
-        tasksList.innerHTML = tasksHTML
-        // project.tasks.forEach(task => {
-        //     task.location = `project-${project.ID}`
-        // })
-        // project.updateTasks()
-        project.addEventListeners()
-    }
-
-    deleteProject(project) {
-        const projectHTML = document.querySelector(`.project-${project.ID}`)
-        projectHTML.remove()
+                newTask.addTask(task, location);
+        });
+        tasksList.innerHTML = tasksHTML;
+        project.addEventListeners();
     }
 
     addEventListeners(project) {
-        const htmlItem = document.querySelector(".project-" + project.ID)
-        let showFormBtn = htmlItem.querySelector(".show-task-form")
-        let form = htmlItem.querySelector('form')
-        let cancelBtn = htmlItem.querySelector(".cancel-task")
-        let addTaskBtn = htmlItem.querySelector('.submit-task')
+        const htmlItem = document.querySelector(`.project-${project.ID}`);
+        const showFormBtn = htmlItem.querySelector(".show-task-form");
+        const form = htmlItem.querySelector("form");
+        const cancelBtn = htmlItem.querySelector(".cancel-task");
+        const addTaskBtn = htmlItem.querySelector(".submit-task");
 
-        showFormBtn.addEventListener('click', () => {
-            form.style.visibility = "visible"
-            showFormBtn.style.visibility = "hidden"
+        showFormBtn.addEventListener("click", () => {
+            form.style.visibility = "visible";
+            showFormBtn.style.visibility = "hidden";
 
-            let taskName = htmlItem.querySelector('.taskName')
-            let taskDescription = htmlItem.querySelector('.taskDescription')
-            let taskDate = htmlItem.querySelector('.taskDate')
+            const taskName = htmlItem.querySelector(".taskName");
+            const taskDescription = htmlItem.querySelector(".taskDescription");
+            const taskDate = htmlItem.querySelector(".taskDate");
 
-            taskName.style.border = "none"
-            taskName.value = ""
-            taskDescription.value = ""
+            taskName.style.border = "none";
+            taskName.value = "";
+            taskDescription.value = "";
 
             const now = new Date();
             const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
             const isoDate = localDate.toISOString().slice(0, 16);
-            taskDate.value = isoDate
+            taskDate.value = isoDate;
         }
-        )
+        );
 
-        cancelBtn.addEventListener('click', () => {
-            form.style.visibility = "hidden"
-            showFormBtn.style.visibility = 'visible'
-        })
+        cancelBtn.addEventListener("click", () => {
+            form.style.visibility = "hidden";
+            showFormBtn.style.visibility = "visible";
+        });
 
-        addTaskBtn.addEventListener('click', () => {
-            let taskName = htmlItem.querySelector('.taskName')
+        addTaskBtn.addEventListener("click", () => {
+            const taskName = htmlItem.querySelector(".taskName");
             if (taskName.value.length === 0) {
                 taskName.style.border = "1px dotted red";
                 return;
             }
 
-            form.style.visibility = "hidden"
-            showFormBtn.style.visibility = 'visible'
-        })
+            form.style.visibility = "hidden";
+            showFormBtn.style.visibility = "visible";
+        });
 
         const editableProject = htmlItem.querySelector(".project-name");
 
-        editableProject.addEventListener('click', this.makeProjectEditable.bind(this, editableProject));
+        editableProject.addEventListener("click", this.makeProjectEditable.bind(this, editableProject));
     }
 
     updateTasks(project) {
-        let projectHTML = document.querySelector(`.project-${project.ID}`);
-        let tasksList = projectHTML.querySelector('.tasks-list')
-        let tasksHTML = ``
+        const projectHTML = document.querySelector(`.project-${project.ID}`);
+        const tasksList = projectHTML.querySelector(".tasks-list");
+        let tasksHTML = "";
 
-        project.tasks.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-        })
+        project.tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         project.tasks.forEach(task => {
-            task.projectID = project.ID
-            const location = `project-${project.ID}`
-            let newTask = new TaskDOM();
+            task.projectID = project.ID;
+            const location = `project-${project.ID}`;
+            const newTask = new TaskDOM();
             tasksHTML +=
-                newTask.addTask(task, location)
-        })
-        tasksList.innerHTML = tasksHTML
+                newTask.addTask(task, location);
+        });
+        tasksList.innerHTML = tasksHTML;
         project.tasks.forEach(task => {
-            task.addEventListenersAt(`project-${project.ID}`)
-        })
-    }
-
-    addTask(task) {
-        const htmlItem = document.querySelector(`.${task.location}`)
-        let taskDOM = new TaskDOM();
-
-        let newTask = taskDOM.addTask(this)
-        let tasks = htmlItem.querySelector('.tasks-list')
-        tasks.innerHTML += newTask
-
-        let noOfTasksSpan = document.querySelector(`.${task.location} .noOfTasks`)
-        noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent) + 1
+            task.addEventListenersAt(`project-${project.ID}`);
+        });
     }
 
     makeProjectEditable(paragraphElement) {
@@ -157,8 +134,8 @@ export default class ProjectDOM {
             return;
         }
 
-        const projectHTML = paragraphElement.parentNode.parentNode
-        const projectClasses = projectHTML.classList[0]
+        const projectHTML = paragraphElement.parentNode.parentNode;
+        const projectClasses = projectHTML.classList[0];
         const myRegex = /(?<=project-)[^-]+/;
         const projectID = projectClasses.match(myRegex)[0];
 
@@ -167,7 +144,7 @@ export default class ProjectDOM {
         // Replace the paragraph with an input field
         // Check if an input element already exists in the DOM
         let inputElement = paragraphElement.previousElementSibling;
-        let noOfTasks = paragraphElement.nextElementSibling;
+        const noOfTasks = paragraphElement.nextElementSibling;
 
         if (!inputElement || inputElement.tagName !== "INPUT")
             inputElement = document.createElement("input");
@@ -175,23 +152,43 @@ export default class ProjectDOM {
         const myRegex2 = /\(([^)]+)\)/;
         const result = textValue.match(myRegex2)[1];
         inputElement.value = result;
-        inputElement.classList.add("editable-input")
+        inputElement.classList.add("editable-input");
         paragraphElement.parentNode.insertBefore(inputElement, paragraphElement);
 
         inputElement.onblur = () => {
             // Update the paragraph with the new text
             const updatedTextValue = inputElement.value;
             paragraphElement.textContent = `(${updatedTextValue})`;
-            noOfTasks.style.display = 'block'
+            noOfTasks.style.display = "block";
             paragraphElement.style.display = "block";
             inputElement.style.display = "none";
-            this.localStorage.updateProject(projectID, updatedTextValue)
+            this.localStorage.updateProject(projectID, updatedTextValue);
 
-        }
-        noOfTasks.style.display = 'none'
+        };
+        noOfTasks.style.display = "none";
         paragraphElement.style.display = "none";
         inputElement.style.display = "block";
         // Focus on the input field
         inputElement.focus();
     }
+
+
+    addTask(task) {
+        const htmlItem = document.querySelector(`.${task.location}`);
+        const taskDOM = new TaskDOM();
+
+        const newTask = taskDOM.addTask(this);
+        const tasks = htmlItem.querySelector(".tasks-list");
+        tasks.innerHTML += newTask;
+
+        const noOfTasksSpan = document.querySelector(`.${task.location} .noOfTasks`);
+        noOfTasksSpan.textContent = parseInt(noOfTasksSpan.textContent, 10) + 1;
+    }
+
+
+    deleteProject(project) {
+        const projectHTML = document.querySelector(`.project-${project.ID}`);
+        projectHTML.remove();
+    }
+
 }

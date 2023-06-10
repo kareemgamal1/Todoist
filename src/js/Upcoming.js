@@ -1,6 +1,6 @@
 import Day from "./Day";
-import UpcomingDOM from "./DOM/UpcomingDOM"
-import LocalStorage from "./localStorage"
+import UpcomingDOM from "./DOM/UpcomingDOM";
+import LocalStorage from "./localStorage";
 
 export default class Upcoming {
     constructor() {

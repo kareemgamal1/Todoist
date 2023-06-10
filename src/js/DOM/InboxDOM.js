@@ -3,20 +3,20 @@ export default class InboxDOM {
         // Get the form, form button, finish button, and cancel button
         this.form = document.querySelector(".new-project");
         this.formBtn = document.querySelector(".add-project-btn");
-        this.finishBtn = document.querySelector('.new-project .add');
-        this.cancelBtn = document.querySelector('.new-project .cancel-add');
+        this.finishBtn = document.querySelector(".new-project .add");
+        this.cancelBtn = document.querySelector(".new-project .cancel-add");
 
         // Add event listeners to the form buttons
         this.formBtn.addEventListener("click", (event) => {
-            event.preventDefault()
+            event.preventDefault();
             this.showForm();
         });
-        this.cancelBtn.addEventListener('click', (event) => {
-            event.preventDefault()
+        this.cancelBtn.addEventListener("click", (event) => {
+            event.preventDefault();
             this.hideForm();
         });
-        this.finishBtn.addEventListener('click', (event) => {
-            event.preventDefault()
+        this.finishBtn.addEventListener("click", (event) => {
+            event.preventDefault();
             this.hideForm();
         });
     }
