@@ -22,13 +22,13 @@ export default class InboxDOM {
     }
 
     showForm() {
-        // Toggle the visibility of the form and the add project button
+        // Shows form, hides formButton
         this.form.classList.toggle("d-none");
         this.formBtn.classList.toggle("d-none");
     }
 
     hideForm() {
-        // Toggle the visibility of the form and the add project button
+        // Shows formButton, hides form
         this.form.classList.toggle("d-none");
         this.formBtn.classList.toggle("d-none");
     }

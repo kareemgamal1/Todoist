@@ -44,34 +44,6 @@ export default class TodayDOM {
         today.addEventListeners();
     }
 
-    addTask(task) {
-        const htmlItem = document.querySelector(".today-page .today");
-        const taskDOM = new TaskDOM();
-        const newTask = taskDOM.addTask(task, task.dayID);
-        const tasks = htmlItem.querySelector(".tasks-list");
-        tasks.innerHTML += newTask;
-    }
-
-
-    updateTasks(today) {
-        const todayHTML = document.querySelector(".today-page");
-        const tasksList = todayHTML.querySelector(".tasks-list");
-        let tasksHTML = "";
-        if (today.tasks.length === 0)
-            tasksList.innerHTML = tasksHTML;
-
-        today.tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        today.tasks.forEach(task => {
-            task.locationID = "1";
-            task.location = "today";
-            const newTask = new TaskDOM();
-            tasksHTML +=
-                newTask.addTask(task, "today");
-        });
-        tasksList.innerHTML = tasksHTML;
-    }
-
     addEventListeners() {
         const htmlItem = document.querySelector(".today-page");
         const showFormBtn = htmlItem.querySelector(".show-task-form");
@@ -114,6 +86,40 @@ export default class TodayDOM {
             showFormBtn.style.visibility = "visible";
         });
 
+    }
+
+    addTask(task) {
+        const htmlItem = document.querySelector(".today-page .today");
+        const taskDOM = new TaskDOM();
+        const newTask = taskDOM.addTask(task, task.dayID);
+        const tasks = htmlItem.querySelector(".tasks-list");
+        tasks.innerHTML += newTask;
+    }
+
+
+    updateTasks(today) {
+        // Find the HTML element for today
+        const todayHTML = document.querySelector(".today-page");
+
+        // If the HTML element exists (more secure)
+        if (todayHTML) {
+            // Find the HTML element for the tasks list
+            const tasksList = todayHTML.querySelector(".tasks-list");
+
+            // Sort the tasks for today by date
+            today.tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Generate the HTML for each task and add it to the tasks list
+            tasksList.innerHTML = today.tasks.reduce((tasksHTML, task) => {
+                // Define the location for the new task
+                const location = "today";
+                // Create a new TaskDOM instance
+                const newTask = new TaskDOM();
+                console.log('s')
+                // Add the HTML for the task to the accumulated tasksHTML value
+                return tasksHTML + newTask.addTask(task, location);
+            }, "");
+        }
     }
 
 }

@@ -12,7 +12,7 @@ export default class DayDOM {
   }
 
   initialize() {
-    this.tasks = this.localStorage.getTasksForDay(this.date);
+    this.tasks = this.localStorage.getDayTasks(this.date);
 
     this.tasks.forEach((task) => {
       const taskLocation = `day-${this.dateString}`;
@@ -44,7 +44,8 @@ export default class DayDOM {
       taskName.value = "";
       taskDescription.value = "";
 
-      const now = new Date();
+      // Sets input date to day date
+      const now = new Date(this.date);
       const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
       const isoDate = localDate.toISOString().slice(0, 16);
       taskDate.value = isoDate;
@@ -71,7 +72,8 @@ export default class DayDOM {
     const options = { day: "numeric", month: "long", weekday: "long" };
     let formattedDate = new Intl.DateTimeFormat("en-US", options).format(this.date);
     const [weekdayText, monthText, dayText] = formattedDate.split(" ");
-    formattedDate = `${dayText} ${monthText} ‧ ${weekdayText.slice(0, -1)}`;// slice removes trailing comma from weekday
+    formattedDate = `${dayText} ${monthText} ‧ ${weekdayText.slice(0, -1)}`;// slice removes trailing comma from weekday 
+    // 13 June ‧ Tuesday
 
     // Check if date is today or tomorrow
     const today = new Date();
@@ -84,9 +86,9 @@ export default class DayDOM {
       && this.date.getFullYear() === today.getFullYear();
 
     if (isToday) {
-      formattedDate = `<strong>Today</strong>, ${formattedDate}`;
+      formattedDate = `${dayText} ${monthText} ‧ Today ‧ ${weekdayText.slice(0, -1)}`;
     } else if (isTomorrow) {
-      formattedDate = `<strong>Tomorrow</strong>, ${formattedDate}`;
+      formattedDate = `${dayText} ${monthText} ‧ Tomorrow ‧ ${weekdayText.slice(0, -1)}`;
     }
 
     const dayHTML = `
@@ -109,7 +111,7 @@ export default class DayDOM {
 
           <div className="control">
           
-            <input type="datetime-local" class="taskDate" value="2023-06-30T12:00" onclick="this.showPicker()" >
+            <input type="datetime-local" class="taskDate" onclick="this.showPicker()" >
             <div className="control-form">
             <button type="button" class="btn btn-light cancel-task">Cancel</button>
             <button type="button" class="btn btn-dark submit-task">Add task</button>
@@ -125,31 +127,32 @@ export default class DayDOM {
     const daysHTML = document.querySelector(".upcoming-page");
     daysHTML.insertAdjacentHTML("beforeend", dayHTML);// a cookie for all the cross site script attackers
 
-    const myDateTimeLocalInput = daysHTML.querySelector(".taskDate")
-    console.log(myDateTimeLocalInput)
-
-    myDateTimeLocalInput.value = "2023-06-10T12:00";
-
     day.addEventListeners();
     return dayHTML;
   }
 
 
   updateTasks(day) {
+    // Find the HTML element for the current day
     const dayHTML = document.querySelector(`.day-${day.dateString}`);
-    if (dayHTML) {
-      const tasksList = dayHTML.querySelector(".tasks-list");
-      let tasksHTML = "";
 
+    // If the HTML element exists
+    if (dayHTML) {
+      // Find the HTML element for the tasks list
+      const tasksList = dayHTML.querySelector(".tasks-list");
+
+      // Sort the tasks for the day by date
       day.tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-      day.tasks.forEach((task) => {
+      // Generate the HTML for each task and add it to the tasks list
+      tasksList.innerHTML = day.tasks.reduce((tasksHTML, task) => {
+        // Define the location for the new task
         const location = `day-${day.dateString}`;
+        // Create a new TaskDOM instance
         const newTask = new TaskDOM();
-        tasksHTML
-          += newTask.addTask(task, location);
-      });
-      tasksList.innerHTML = tasksHTML;
+        // Add the HTML for the task to the accumulated tasksHTML value
+        return tasksHTML + newTask.addTask(task, location);
+      }, "");
     }
   }
 }

@@ -17,9 +17,9 @@ export default class LocalStorage {
         this.projects = [
             new Project(
                 "",
-                new Task("I don't know honestly", "Yeahhh", new Date(2023, 4, 1,16,30)),
-                new Task("For real for real", "", new Date(2023, 6, 1,12,5)),
-                new Task("I miss her", "idk", new Date())
+                new Task("Walk the dog", "", new Date(2023, 4, 1, 16, 30)),
+                new Task("Attend my work anniversary party", "1-Get the suit ready\n2-Fuel the car", new Date(2023, 6, 1, 12, 5)),
+                new Task("Clean the dishes for my wife", "Wash my hands", new Date())
             ),
             new Project(
                 "College",
@@ -190,25 +190,31 @@ export default class LocalStorage {
     }
 
     getDays() {
-        let days = JSON.parse(localStorage.getItem("days") || "[]");
-        days = days.map((day) => {
-            day.localStorage = new LocalStorage();
-            day.dayDOM = new DayDOM(day.tasks, day.date, day.dateString);
-            return Object.assign(new Day(new Date(day.date)), day);
-        });
+        // Retrieve the days array from local storage, or an empty array if it doesn't exist
+        const days = JSON.parse(localStorage.getItem("days") || "[]");
 
+        // Loop through each day object and update its properties
         days.forEach((day) => {
-            day.tasks = day.tasks.map((task) => {
+            // Create a new local storage instance for the day
+            day.localStorage = new LocalStorage();
+            // Create a new day DOM instance for the day
+            day.dayDOM = new DayDOM(day.tasks, day.date, day.dateString);
+            // Loop through each task object for the day and update its properties
+            day.tasks.forEach((task) => {
+                // Create a new local storage instance for the task
                 task.localStorage = new LocalStorage();
+                // Create a new task DOM instance for the task
                 task.taskDOM = new TaskDOM();
+                // Convert the task date string to a date object
                 task.date = new Date(task.date);
-                return Object.assign(new Task(), task);
             });
         });
-        return days;
+
+        // Map the updated day objects to a new array of Day instances
+        return days.map((day) => new Day(new Date(day.date), day.tasks, day.localStorage, day.dayDOM));
     }
 
-    getTasksForDay(date) {
+    getDayTasks(date) {
         const allTasks = this.getTasks();
         const dayTasks = [];
         date = new Date(date);
@@ -225,78 +231,46 @@ export default class LocalStorage {
     }
 
     setTasksForDay(date, newTasks) {
-        const today = new Date();
-        const isBeforeToday = date.getFullYear() < today.getFullYear() ||
-            (date.getFullYear() === today.getFullYear() && date.getMonth() < today.getMonth()) ||
-            (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() < today.getDate());
+        const dayDate = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`;
+        const days = this.getDays();
+        const dayIndex = days.findIndex((element) => element.dateString === dayDate);
 
-        if (isBeforeToday) {
+        if (dayIndex === -1) {
             return;
         }
 
-        const days = this.getDays();
-        const dayDate = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`;
-        let dayIndex = -1;
-        for (let index = 0; index < days.length; index += 1) {
-            const element = days[index];
-            if (element.dateString === dayDate) {
-                dayIndex = index;
-                break;
-            }
-        }
         days[dayIndex].tasks = newTasks;
         this.setDays(days);
     }
 
-    // Increase the count of finished tasks in the local storage
     finishTask(task) {
         // Projects
         {
             const projectID = this.getProjectID(task);
             const projects = this.getProjects();
-            const projectIndex = projects.findIndex((p) => p.ID === projectID);
-            const project = projects[projectIndex];
-            if (projectID !== -1) {
-                project.tasks = project.tasks.filter((projectTask) =>
-                    projectTask.ID !== task.ID
-                );
-                projects[projectIndex] = project;
+            const project = projects.find((p) => p.ID === projectID);
+            if (project) {
+                project.tasks = project.tasks.filter((projectTask) => projectTask.ID !== task.ID);
                 project.noOfTasks = project.tasks.length;
             }
             this.setProjects(projects);
         }
         // Today
         {
-            let todayTasks = this.getTodayTasks();
-            const taskIndex = todayTasks.findIndex((todayTask) => todayTask.ID === task.ID);
-            todayTasks = todayTasks.filter((todayTask) =>
-                todayTask.ID !== task.ID
-            );
-            if (taskIndex !== -1) {
-                this.setTodayTasks(todayTasks);
-            }
+            const todayTasks = this.getTodayTasks().filter((todayTask) => todayTask.ID !== task.ID);
+            this.setTodayTasks(todayTasks);
         }
         // Day
         {
-            let dayTasks = this.getTasksForDay(task.date);
-            dayTasks = dayTasks.filter((t) =>
-                t.ID !== task.ID
-            );
+            const dayTasks = this.getDayTasks(task.date).filter((t) => t.ID !== task.ID);
             this.setTasksForDay(task.date, dayTasks);
         }
         // Tasks
         {
-            let tasks = this.getTasks();
-            tasks = tasks.filter((t) =>
-                t.ID !== task.ID
-            );
+            const tasks = this.getTasks().filter((t) => t.ID !== task.ID);
             this.setTasks(tasks);
         }
         // DOM
-        {
-            let finishedTasks = localStorage.getItem("finishedTasks");
-            finishedTasks += 1;
-            localStorage.setItem("finishedTasks", finishedTasks);
-        }
+        localStorage.setItem("finishedTasks", Number(localStorage.getItem("finishedTasks")) + 1);
     }
 }

@@ -109,18 +109,6 @@ export default class Task {
     return project;
   }
 
-  getDayID() {
-    let dayID = -1;
-    const tasks = this.localStorage.getTasks();
-    for (const task of tasks) {
-      if (task.ID === this.ID) {
-        dayID = task.dayID;
-        break;
-      }
-    }
-    return dayID;
-  }
-
   getIsToday() {
     const today = new Date();
     const isToday = this.date.getDate() === today.getDate() &&

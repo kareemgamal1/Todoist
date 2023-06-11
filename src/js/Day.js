@@ -9,13 +9,13 @@ export default class Day {
     constructor(date) {
         this.localStorage = new LocalStorage();
         this.date = date;
-        this.tasks = this.localStorage.getTasksForDay(date);
+        this.tasks = this.localStorage.getDayTasks(date);
         this.dateString = `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`;
         this.dayDOM = new DayDOM(this.tasks, this.date, this.dateString);
     }
 
     initialize() {
-        this.tasks = this.localStorage.getTasksForDay(this.date);
+        this.tasks = this.localStorage.getDayTasks(this.date);
         this.dayDOM.initialize();
         this.tasks.forEach((task) => {
             task.addEventListenersAt(`day-${this.dateString}`);
@@ -58,7 +58,7 @@ export default class Day {
         taskToAdd.addTask();
         taskToAdd.addEventListenersAt(`day-${taskDateString}`); // it should add it when we add task
 
-        this.tasks = this.localStorage.getTasksForDay(taskDate);
+        this.tasks = this.localStorage.getDayTasks(taskDate);
         if (taskDateString === this.dateString) {
             this.updateTasks();
         }

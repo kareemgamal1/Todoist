@@ -281,8 +281,8 @@ export default class TaskDOM {
       date = new Date(date);
       const task = this.localStorage.getTask(taskID);
 
-      let oldTasks = this.localStorage.getTasksForDay(task.date);
-      const newTasks = this.localStorage.getTasksForDay(date);
+      let oldTasks = this.localStorage.getDayTasks(task.date);
+      const newTasks = this.localStorage.getDayTasks(date);
 
       oldTasks = oldTasks.filter(t => t.ID !== taskID);
       this.localStorage.setTasksForDay(task.date, oldTasks);
