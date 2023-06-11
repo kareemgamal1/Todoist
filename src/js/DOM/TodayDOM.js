@@ -115,7 +115,6 @@ export default class TodayDOM {
                 const location = "today";
                 // Create a new TaskDOM instance
                 const newTask = new TaskDOM();
-                console.log('s')
                 // Add the HTML for the task to the accumulated tasksHTML value
                 return tasksHTML + newTask.addTask(task, location);
             }, "");
