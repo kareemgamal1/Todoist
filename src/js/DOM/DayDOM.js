@@ -91,12 +91,12 @@ export default class DayDOM {
       formattedDate = `${dayText} ${monthText} ‧ Tomorrow ‧ ${weekdayText.slice(0, -1)}`;
     }
 
-    const dayHTML = `
+    const dayHTML = `<div class="day-${this.dateString}">
                         <div class="heading d-flex gap-1 align-items-center">
                     <small>${formattedDate}</small>
                     </div>
                     <hr class="day-seperator m-0 mb-1"></hr>
-        <div class="day-${this.dateString}">
+        
     <div class="tasks-list">
 
     </div>
@@ -121,7 +121,6 @@ export default class DayDOM {
         </form>
   </div>
         </div>
-    
   `;
 
     const daysHTML = document.querySelector(".upcoming-page");
