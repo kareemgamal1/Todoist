@@ -40,6 +40,8 @@ All locations:<br />
 
 10-Search for a task from search bar by task name
 
+11-Days are lazy loaded in the Upcoming page, everytime a user scrolls to the bottom it loads 5 additional days.
+
 ---
 ## Future features to add:
 1-Ability to sign up, and save user info to firebase <br />
